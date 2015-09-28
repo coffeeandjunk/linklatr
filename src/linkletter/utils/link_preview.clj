@@ -2,6 +2,7 @@
   (:require [linkletter.db.core :as db]
             [ring.util.http-response :refer [ok]]
             [ring.util.codec :as codec]
+<<<<<<< HEAD
             [clojure.string :as cstring]
             [net.cgrand.enlive-html :as html]
             [clj-http.client :as client]
@@ -100,4 +101,19 @@
 
 ;(get-link-details "http://clojure.org/cheatsheet")
 ;(.getHost (java.net.URL. "http://clojure.org/cheatsheet"))
+=======
+            [net.cgrand.enlive-html :as html]
+            [cheshire.core :refer  [generate-string]]))
+
+
+(defn fetch-url [] ; [url]
+
+  ;(slurp url)
+  ;(spit (slurp "http://aeon.co/magazine/science/the-universal-constants-that-drive-physicists-mad/")
+  (slurp "test.html"))
+
+;(html/html-resource (java.net.URL. "http://www.google.com"))
+;(fetch-url)
+
+>>>>>>> b80c846ebbea60f717b6186d075e43a89ea2225d
 

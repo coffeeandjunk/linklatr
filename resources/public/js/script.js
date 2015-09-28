@@ -36,7 +36,6 @@ $(document).ready(function(){
     success: function(response){
       if(response.length > 0){
         $.each(response, function(idx,obj){
-            //appendLink( obj, linksContainer )
           });
       }
       console.log(response);
