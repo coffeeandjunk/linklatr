@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<script id="entry-template" type="text/x-handlebars-template">
+  <div class="col-md-4 link-item">
+    <a href="{{link.url}}">
+      <img src="" class="link-image" alt=""/>
+      <div class="link-title">{{link.title}}</div>
+      <div class="link-domain">{{test}}</div>
+    </a>
+  </div>
+</script>
+
+<script id="test-template" type="text/x-handlebars-template">
+  <p>{{id}}</p>
+</script>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 bg-danger error"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <form name="link-form" id="link-form">
+        {% csrf-field %}
+        <div class="form-group col-md-8 link-label-container">
+          <label for="link-name">Link label</label>
+          <input type="text" class="form-control" id="link-name" name="link-name" placeholder="Give a title to the link">
+        </div>
+        <div class="form-group col-md-8 link-container">
+          <label for="link">Link</label>
+          <input type="text" class="form-control" id="link" name="link" placeholder="Paste the link here">
+        </div>
+      </form>
+      <div class="form-group col-md-12">
+        <button class="link-submit btn btn-default">Submiit</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row links-container">
+    <div class="col-md-4 link-item">
+      <a href="">
+        <img src="https://cdn-images-1.medium.com/max/800/1*quxuSggwBdYkyCoYlE3OAA.png" class="link-image" alt="">
+        <div class="link-title">This is a test title</div>
+        <div class="link-domain">www.medium.com</div>
+      </a>
+    </div>
+    <div class="col-md-4 link-item"></div>
+    <div class="col-md-4 link-item"></div>
+    
+  </div>
+
+
+</div>
+{% endblock %}
