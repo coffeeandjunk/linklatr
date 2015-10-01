@@ -4,19 +4,53 @@ body {
     height: 100%;
     padding-top: 40px;
 }
-<<<<<<< HEAD
+
+.ll-body-container{
+	margin-bottom: 100px;
+}
 
 .links-container{
   height: 200px;
+	margin-bottom: 25px;
 }
 
-.links-container .link-item{
+.links-container .link-item-wrapper{
   height: 100%;
 }
 
-.links-container .link-item img{
+.links-container .link-item-wrapper .link-item{
+	height: 100%;
+	box-shadow: 4px 6px 6px #BFBFBF;
+}
+
+.links-container .link-image-wrapper{
+	/* background-image: url("https://cdn-images-1.medium.com/max/800/1*quxuSggwBdYkyCoYlE3OAA.png"); */
+	background-image: url("https://d262ilb51hltx0.cloudfront.net/max/1600/1*MqURYIsngJX7b9N5E3ZULA.jpeg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 86%;
+	width: 100%;
+	position: relative;
+}
+
+.links-container .link-title{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	padding: 4px 10px;
+	font-size: 1.4em;
+	color: #fff;
+	text-shadow: 1px 1px #7E7E7E;
+}
+
+.links-container .link-domain{
+	padding: 4px 8px;
+	font-size: 0.8em;
+	color: #7e7e7e;
+}
+
+/* .links-container .link-item img{
   height: 100%;
   width: auto;
-}
-=======
->>>>>>> b80c846ebbea60f717b6186d075e43a89ea2225d
+} */

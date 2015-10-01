@@ -2,6 +2,7 @@
   (:require [linkletter.layout :as layout]
             [compojure.core :refer [defroutes GET POST ANY]]
             [ring.util.http-response :refer [ok]]
+            [ring.util.response :as res]
             [liberator.core :refer  [defresource resource]]
             [cheshire.core :refer  [generate-string]]
             [linkletter.home-handler :as home]
@@ -42,7 +43,8 @@
 ;  :available-media-types  ["text/plain"])
 
 (defn home-page []
-  (layout/render "home.html"))
+  ;(layout/render "home.html")
+  (res/redirect "index.html"))
 
 (defn get-links []
   (json-response (home/get-links)))

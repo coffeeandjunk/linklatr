@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Welcome to linkletter</title>
+  </head>
+  <body>
+  <!-- navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">linkletter</a>
+        </div>
+        <div class="navbar-collapse collapse ">
+          <ul class="nav navbar-nav">
+            <li  class="active">
+              <a href="">Home</a>
+            </li>
+            <li  class=>
+              <a href="/about">About</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid ll-body-container">
+      <div class="row">
+        <div class="col-md-8 bg-danger error"></div>
+      </div>
+        <div class="row">
+          <div class="col-md-12">
+            <form name="link-form" id="link-form">
+              <div class="form-group col-md-8 link-label-container">
+                <label for="link-name">Link label</label>
+                <input type="text" class="form-control" id="link-name" name="link-name" placeholder="Give a title to the link">
+              </div>
+              <div class="form-group col-md-8 link-container">
+                <label for="link">Link</label>
+                <input type="text" class="form-control" id="link" name="link" placeholder="Paste the link here">
+              </div>
+            </form>
+            <div class="form-group col-md-12">
+              <button class="link-submit btn btn-default">Submiit</button>
+              <button class="dummy">Dummy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="links-container-wrapper">
+
+        </div>
+    </div>
+
+  <script id="link-template" type="text/x-handlebars-template">
+    <div class="col-md-4 link-item-wrapper">
+      <div class="link-item">
+        <a href="{{link.url}}">
+          <div class="link-image-wrapper">
+            <div class="link-title">{{link.title}}</div>
+          </div>
+          <div class="link-domain">{{link.domain}}</div>
+        </a>
+      </div>
+    </div>
+  </script>
+
+  
+  <script id="row-template" type="text/x-handlebars-template">
+    <div class="row links-container">
+    </div>
+  </script>
+
+
+      <!-- scripts and styles -->
+      <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-theme.min.css"> 
+      <link rel="stylesheet" href="css/screen.css"/>
+
+      <script src="/assets/jquery/jquery.min.js" type="text/javascript"></script>
+      <script src="/assets/jquery/jquery.min.js" type="text/javascript"></script>
+      <script src="/assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+      <script src="js/handlebars.js" type="text/javascript"></script>
+      <script src="js/script.js" type="text/javascript"></script>
+      <script src="js/LnkLtr.utils.js" type="text/javascript"></script>
+  </body>
+</html>
+
+
