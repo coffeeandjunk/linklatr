@@ -4,18 +4,27 @@
             [ring.util.http-response :refer [ok]]
             [ring.util.response :as res]
             [liberator.core :refer  [defresource resource]]
-            [cheshire.core :refer  [generate-string]]
+            [cheshire.core :refer  [generate-string parse-string]]
             [linkletter.home-handler :as home]
             [clojure.java.io :as io]
             [clj-time.core :as time]
             [buddy.sign.jws :as jws]
             [buddy.auth :refer [authenticated? throw-unauthorized]]
+            [taoensso.timbre :as log]
+            [clojure.walk :refer [keywordize-keys]]
             [buddy.auth.backends.token :refer [jws-backend]]
             [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]))
 
 
 (def users (atom  ["foo" "bar" "moo"]))
 (def secret "mysupersecret")
+
+(def json-map {"url" "test url"})
+(def clj-map {:a 1 :b 3})
+(defn tt []
+  (generate-string clj-map))
+(defn tt1 []
+  (parse-string json-map))
 
 (defn okay [d] {:status 200 :body d})
 (defn bad-request [d] {:status 400 :body d})
@@ -26,11 +35,11 @@
    :body (generate-string data)})
 
 (defn submit-link [request]
-  ;(println request)
-  ;(println  (get-in request  [:params :link]))
+  (log/info "submit-link : request: " request)
   (let [op (home/insert-link! request)]
     (if-not (contains? op :error)
-      (json-response op)
+      (do ( log/info "from submit-link: " op)
+          (json-response op))
       (json-response {:data op} 400)))) 
 
 
@@ -85,11 +94,20 @@
 (defn about-page []
   (layout/render "about.html"))
 
+(defn get-preview-details
+  "fetches the url details"
+  [request]
+  (log/info ">>>> query-params>>>> " (keywordize-keys  (:query-params request)))
+  (json-response (home/get-link-preview (:url  (keywordize-keys (:query-params request)))))
+  
+  )
+
 
 (defroutes home-routes
   (GET "/" [] (home-page))
   (GET "/links" [] (get-links))
   (GET "/home" [request] home)
+  (GET "/link/details*" [request] get-preview-details)
   (POST "/"  [] submit-link)
   (GET "/login" [] (login-page))
   (POST "/login" [request] login)

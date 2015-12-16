@@ -28,23 +28,45 @@
       <div class="row">
         <div class="col-md-8 bg-danger error"></div>
       </div>
+        
+        <!-- form and link preview container -->
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <form name="link-form" id="link-form">
-              <div class="form-group col-md-8 link-label-container">
-                <label for="link-name">Link label</label>
-                <input type="text" class="form-control" id="link-name" name="link-name" placeholder="Give a title to the link">
-              </div>
-              <div class="form-group col-md-8 link-container">
+              <div class="form-group col-md-12 link-container">
                 <label for="link">Link</label>
                 <input type="text" class="form-control" id="link" name="link" placeholder="Paste the link here">
               </div>
+              <div class="form-group col-md-12 link-label-container">
+                <label for="link-name">Link label</label>
+                <input type="text" class="form-control" id="link-name" name="link-name" placeholder="Give a title to the link">
+              </div>
+              <div class="form-group col-md-12 link-label-container">
+                <label for="link-desc">Link description</label>
+                <input type="text" class="form-control" id="desc" name="desc" placeholder="Description">
+              </div>
+              <input type="hidden" class="" id="image-url" name="image-url" >
             </form>
             <div class="form-group col-md-12">
               <button class="link-submit btn btn-default">Submiit</button>
-              <button class="dummy">Dummy</button>
+              <!-- <button class="dummy">Dummy</button> -->
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="col-md-6">
+            <div class="row link-preview-container" id="link-preview-container">
+              <div class="sk-folding-cube loader hide">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+              </div>
+              <div class="col-md-12 link-preview">
+              </div>
             </div>
           </div>
+          <input type="hidden" name="image_url" value=""/>
+          <input type="hidden" name="desc" value=""/>
         </div>
 
         <div class="links-container-wrapper">
@@ -55,11 +77,11 @@
   <script id="link-template" type="text/x-handlebars-template">
     <div class="col-md-4 link-item-wrapper">
       <div class="link-item">
-        <a href="{{link.url}}">
-          <div class="link-image-wrapper">
-            <div class="link-title">{{link.title}}</div>
+        <a target="_blank" href="{{url}}">
+          <div class="link-image-wrapper" style="background-image: url({{image_url}});">
+            <div class="link-title">{{title}}</div>
           </div>
-          <div class="link-domain">{{link.domain}}</div>
+          <div class="link-domain">{{domain}}</div>
         </a>
       </div>
     </div>
@@ -83,6 +105,7 @@
       <script src="js/handlebars.js" type="text/javascript"></script>
       <script src="js/script.js" type="text/javascript"></script>
       <script src="js/LnkLtr.utils.js" type="text/javascript"></script>
+      <script src="js/linkModule.js" type="text/javascript"></script>
   </body>
 </html>
 

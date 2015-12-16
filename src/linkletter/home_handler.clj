@@ -2,7 +2,10 @@
   (:require [linkletter.db.core :as db]
             [ring.util.http-response :refer [ok]]
             [ring.util.codec :as codec]
+            [taoensso.timbre :as log]
+            [linkletter.utils.link-preview :as preview]
             [cheshire.core :refer  [generate-string]]))
+
 
 
 (defn encode-url [url]
@@ -15,10 +18,15 @@
 (defn get-user-id []
   1)
 
+(defn escape-string [str]
+  (clojure.string/escape str {\< "&lt;", \> "&gt;", \& "&amp;"}))
+
 (defn clean-form-data [form-data]
-  {:url (get form-data :link)
+  {:url (escape-string (get form-data :link))
    :user_id (get-user-id)
-   :title (get form-data :link-name)})
+   :title (escape-string (get form-data :link-name))
+   :desc (escape-string (get form-data :desc))
+   :image_url (escape-string (get form-data :image-url))})
 
 (def sample-form-data
   {:url "https%3A%2F%2Fgithub.com%2Fring-clojure%2Fring-codec"
@@ -40,15 +48,22 @@
 
 (defn insert-link! [req]
   (if (not (is-url-already-present (:link (:params req))))
-    (db/insert-link<! (clean-form-data (get-form-data req)))
+    (do 
+      ;(log/info "get-link-details >>>>>> " (merge (clean-form-data (get-form-data req)) (preview/get-link-details (:link (:params req)))))
+      (db/insert-link<! (clean-form-data (get-form-data req))))
     {:error "URL already present"}))
 
 ;(defn insert-link! [request] 
  ; (encode-url (get-in request [:params :link])))
+(defn get-link-preview
+  [url]
+  (preview/get-link-details url))
 
 
 ; get all links from database
 (defn get-links []
+  ;(doseq [l (db/get-links)]
+  ;  (timbre/info (preview/get-link-details  (:url  l))))
   (db/get-links))
 
 

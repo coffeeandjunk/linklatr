@@ -5,60 +5,6 @@ var context = {link: {url: "https%3A%2F%2Fgithub.com%2Fring-clojure%2Fring-codec
   },
   test: "njb"};
 
-var linkModule = (function(){
-
-	var module = {};
-  var rowContainer = $('.links-container-wrapper');
-	var rowTmpl = $('#row-template');
-  var linksContainer = $('.links-container');
-
-
-	module.getLastRow = function(linksContainer){
-		return linksContainer.last();
-	}
-
-	module.addToRow = function(row, item){
-		return $(row).append(item);
-	}
-
-	module.compileTemplate = function(tmpl){
-		return Handlebars.compile($(tmpl).html());
-	}
-
-	// TODO implement singleton pattern
-	module.getNewRow = function(rowTmpl){
-		return module.compileTemplate(rowTmpl)();
-	}
-
-	// TODO implement singleton pattern
-	module.getNewLink = function(linkTmpl, context){
-		var tmpl = module.compileTemplate(linkTmpl);
-		return tmpl(context);
-	}
-
-	module.getLinkInRow = function(row){
-		return row.find('.link-item');
-	}
-
-	module.addNewRow = function(link){
-		rowContainer.append(module.addToRow(module.getNewRow(rowTmpl), link));
-	}
-
-	module.addNewLink = function(link){
-		var linksContainer = $('.row.links-container');
-		var lastRow = module.getLastRow(linksContainer);
-		if(lastRow.length > 0 && module.getLinkInRow(lastRow).length < 3 ){
-			module.addToRow(lastRow, link);
-		}else{
-			module.addNewRow(link);
-			//lastRow.after(addToRow(getNewRow(rowTmpl), link));
-		}
-	}
-
-	return module;
-
-
-})();
 
 (function(global){
 	var LnkLtr = global.LnkLtr;
@@ -66,32 +12,65 @@ var linkModule = (function(){
 		LnkLtr = {};
 		global.LnkLtr = LnkLtr;
 	}
+})(this);
 
-})(this)
+LnkLtr = {
 
-$(document).ready(function(){
-
-  function isUrlPresent(obj){
-   return obj.url; 
+  init: function(){
+    var self = this;
+    self.fetchLinkList(null,self.linkModule.displayList);
+    //self.linkModule.displayList(list);
+    self.bindEvents();
+  },
+  fetchLinkList: function(params, callback){
+    /*var callbk = function(response){
+      console.log("response>>>> ", response);
+      return response;
+    }*/
+    return (LnkLtr.ajax('/links', null, callback)); 
+  },
+  showLoader: function(){
+    $('.loader').removeClass('hide');
+  },
+  hideLoader: function(){
+    $('.loader').addClass('hide')
+  },
+  handleGetLink: function(response){
+    console.log('from handleGetLink::::   ', response);
+    //TODO check of there is no error in the response
+    LnkLtr.linkModule.addPreviewLink(response);
+    LnkLtr.hideLoader();
+  },
+  bindEvents: function(){
+    var linkElm = document.getElementById('link');
+    var self = this;
+    linkElm.onchange = function(e){
+      if(linkElm.value && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.value))){
+        console.log(e.target.value, " is a valid url");
+        //make a ajax call and get url details
+        var url= '/link/details',
+            data = { url: linkElm.value }; 
+        LnkLtr.linkModule.resetImage();
+        LnkLtr.showLoader();
+        LnkLtr.ajax(url, data, self.handleGetLink);
+      }
+    };
   }
 
-	var linkItemTmpl = $('#link-template');
-	$('.dummy').click(function(){
-		linkModule.addNewLink(linkModule.getNewLink(linkItemTmpl, context));
-	})
+};
 
 
-  /* $.ajax({
-    type: "GET",
-    url: '/links',
-    success: function(response){
-      if(response.length > 0){
-        $.each(response, function(idx,obj){
-          });
-      }
-      console.log(response);
-    }
-  }); */
+$(document).ready(function(){
+  LnkLtr.init();
+
+  function isUrlPresent(obj){
+    return obj.url; 
+  }
+
+  // TODO remove this code
+  //$('.dummy').click(function(){
+    //LnkLtr.linkModule.addNewLink(context);
+  //})
 
   function isFormValid(form){
     var linkTitle = form.find('.link-label-container');
@@ -119,7 +98,7 @@ $(document).ready(function(){
         data: form.serialize(),
         success: function( response ){
           if(isUrlPresent(response)){
-            appendLink(response,linksContainer)
+            LnkLtr.linkModule.addNewLink(response);
           }     
         },
         error: function( response ){

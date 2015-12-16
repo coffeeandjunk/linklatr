@@ -24,8 +24,8 @@ WHERE id = :id
 -- name: insert-link<!
 -- creates a new user record
 INSERT INTO links
-(url, user_id, title)
-VALUES (:url,  :user_id, :title)
+(url, user_id, title, image_url, link_desc)
+VALUES (:url,  :user_id, :title, :image_url, :desc)
 
 -- name: get-links
 -- get all links from db

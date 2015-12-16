@@ -9,6 +9,10 @@ body {
 	margin-bottom: 100px;
 }
 
+.ll-body-container .error{
+  display:none;
+}
+
 .links-container{
   height: 200px;
 	margin-bottom: 25px;
@@ -23,7 +27,8 @@ body {
 	box-shadow: 4px 6px 6px #BFBFBF;
 }
 
-.links-container .link-image-wrapper{
+.links-container .link-image-wrapper,
+.link-preview-container .link-image-wrapper{
 	/* background-image: url("https://cdn-images-1.medium.com/max/800/1*quxuSggwBdYkyCoYlE3OAA.png"); */
 	background-image: url("https://d262ilb51hltx0.cloudfront.net/max/1600/1*MqURYIsngJX7b9N5E3ZULA.jpeg");
 	background-size: cover;
@@ -31,6 +36,12 @@ body {
 	height: 86%;
 	width: 100%;
 	position: relative;
+}
+.link-preview-container .link-image-wrapper{
+  height: 150px;
+}
+.link-preview-container .link-image-wrapper .link-title{
+  display: none;
 }
 
 .links-container .link-title{
@@ -54,3 +65,120 @@ body {
   height: 100%;
   width: auto;
 } */
+
+.link-preview{
+  margin-bottom: 25px;
+}
+
+.link-preview .link-img,
+.link-preview .link-title,
+.link-preview .tags-container{
+  width: 300px;
+}
+
+.link-preview .link-img{
+  height: 150px;
+  background-color: gray;
+  padding: 5px;
+  background-size: cover;
+}
+
+.link-preview .link-title{
+  text-align: center;
+  padding: 5px; 
+}
+
+.link-preview .tags-container{
+  text-align: center;
+}
+
+.link-preview .tags-container ul{
+  list-style-type: none;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.link-preview .tags-container ul li{
+  display: inline-block;
+  margin: 0 4px;
+}
+/* loader css */
+.sk-folding-cube {
+  margin: 40px auto;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  -webkit-transform: rotateZ(45deg);
+          transform: rotateZ(45deg); }
+  .sk-folding-cube .sk-cube {
+    float: left;
+    width: 50%;
+    height: 50%;
+    position: relative;
+    -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+            transform: scale(1.1); }
+  .sk-folding-cube .sk-cube:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+            animation: sk-foldCubeAngle 2.4s infinite linear both;
+    -webkit-transform-origin: 100% 100%;
+        -ms-transform-origin: 100% 100%;
+            transform-origin: 100% 100%; }
+  .sk-folding-cube .sk-cube2 {
+    -webkit-transform: scale(1.1) rotateZ(90deg);
+            transform: scale(1.1) rotateZ(90deg); }
+  .sk-folding-cube .sk-cube3 {
+    -webkit-transform: scale(1.1) rotateZ(180deg);
+            transform: scale(1.1) rotateZ(180deg); }
+  .sk-folding-cube .sk-cube4 {
+    -webkit-transform: scale(1.1) rotateZ(270deg);
+            transform: scale(1.1) rotateZ(270deg); }
+  .sk-folding-cube .sk-cube2:before {
+    -webkit-animation-delay: 0.3s;
+            animation-delay: 0.3s; }
+  .sk-folding-cube .sk-cube3:before {
+    -webkit-animation-delay: 0.6s;
+            animation-delay: 0.6s; }
+  .sk-folding-cube .sk-cube4:before {
+    -webkit-animation-delay: 0.9s;
+            animation-delay: 0.9s; }
+
+@-webkit-keyframes sk-foldCubeAngle {
+  0%, 10% {
+    -webkit-transform: perspective(140px) rotateX(-180deg);
+            transform: perspective(140px) rotateX(-180deg);
+    opacity: 0; }
+  25%, 75% {
+    -webkit-transform: perspective(140px) rotateX(0deg);
+            transform: perspective(140px) rotateX(0deg);
+    opacity: 1; }
+  90%, 100% {
+    -webkit-transform: perspective(140px) rotateY(180deg);
+            transform: perspective(140px) rotateY(180deg);
+    opacity: 0; } }
+
+@keyframes sk-foldCubeAngle {
+  0%, 10% {
+    -webkit-transform: perspective(140px) rotateX(-180deg);
+            transform: perspective(140px) rotateX(-180deg);
+    opacity: 0; }
+  25%, 75% {
+    -webkit-transform: perspective(140px) rotateX(0deg);
+            transform: perspective(140px) rotateX(0deg);
+    opacity: 1; }
+  90%, 100% {
+    -webkit-transform: perspective(140px) rotateY(180deg);
+            transform: perspective(140px) rotateY(180deg);
+    opacity: 0; } }
+
+  .link-preview-container .sk-folding-cube{
+    float: left;
+    margin: 30px 15px;
+  }
