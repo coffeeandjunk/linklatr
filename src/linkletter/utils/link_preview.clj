@@ -5,6 +5,7 @@
             [clojure.string :as cstring]
             [net.cgrand.enlive-html :as html]
             [clj-http.client :as client]
+            [slingshot.slingshot :as sling :only [throw+ try+]]
             [cheshire.core :refer  [generate-string]]))
 
 (def headers
@@ -15,6 +16,7 @@
    :max-redirects 5
    :throw-exceptions true })
 (def url "http://www.99points.info/2010/07/facebook-like-extracting-url-data-with-jquery-ajax-php/")
+(def url2 "https://medium.com/life-learning/how-to-miss-the-point-of-starting-a-business-19faaabf7fc8#.99o8jujp")
 
 (defn fetch-url 
   "fetches the webpage and returns enlive nodes"

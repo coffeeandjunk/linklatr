@@ -73,7 +73,7 @@
 
 (defn login-page
   []
-  (layout/render "login.html"))
+  (res/redirect "login.html"))
 
 (defn login
   [request]

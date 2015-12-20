@@ -34,6 +34,7 @@
                  [yesql "0.5.0-beta2"]
                  [stuarth/clj-oauth2 "0.3.2"]
                  [enlive "1.1.6"]
+                 [slingshot "0.12.2"]
                  [clj-http "2.0.0"]
                  [org.immutant/web "2.0.2"]]
 
