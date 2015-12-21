@@ -27,9 +27,14 @@
 .menu-container .ui.menu .item.link-input{
   padding-left: 0;
   margin: 0;
+  width: calc(100% - 170px);
+}
+.menu-container .link-container{
+  width: 100%;
 }
 .menu-container .link-container .link{
   /*border-radius: 0 !important;*/
+  width: 100%;
   border-radius: 0px;
   border-left: 0px none;
   border-radius: 0px;
@@ -136,4 +141,13 @@
 
 .collection-page .link-container .link-footer .link-controls .icon:hover{
   color: #757575;
+}
+
+/* .add-link-dlg{
+  width: 
+}*/
+.add-link-dlg .image.content{
+  width: 460px;
+  height: 280px;
+  margin: 0 auto;
 }
