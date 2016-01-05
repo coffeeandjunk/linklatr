@@ -35,7 +35,7 @@
    :body (generate-string data)})
 
 (defn submit-link [request]
-  (log/info "submit-link : request: " request)
+  (log/info "\n \n submit-link : request: " request)
   (let [op (home/insert-link! request)]
     (if-not (contains? op :error)
       (do ( log/info "from submit-link: " op)
@@ -98,9 +98,7 @@
   "fetches the url details"
   [request]
   (log/info ">>>> query-params>>>> " (keywordize-keys  (:query-params request)))
-  (json-response (home/get-link-preview (:url  (keywordize-keys (:query-params request)))))
-  
-  )
+  (json-response (home/get-link-preview (:url  (keywordize-keys (:query-params request))))))
 
 
 (defroutes home-routes

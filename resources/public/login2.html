@@ -9,10 +9,14 @@
     <!-- Site Properities -->
     <title>Welcome to Linkletter</title>
     <link rel="stylesheet" type="text/css" href="css/semantic.css">
-    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/fonts.css">
     <script src="/assets/jquery/jquery.min.js" type="text/javascript"></script>
     <script src="js/semantic.js" type="text/javascript"></script>
+    <script src="js/handlebars.js" type="text/javascript"></script>
+    <script src="js/script.js" type="text/javascript"></script>
+    <script src="js/LnkLtr.utils.js" type="text/javascript"></script>
+    <script src="js/linkModule.js" type="text/javascript"></script>
 
 
   </head>
@@ -57,47 +61,59 @@
 
 
       <div class="ui four column stackable grid container collection-page">
-        <div class="column ">
-          <div class="link-container">
-            <a href="javascript:;" class="link-url"></a>
-            <div class="image-container" style="background-image: url(https://cdn-images-1.medium.com/max/800/1*qUF3hZQFAFtqyYO1pRS0Tw.png);">
-              <a href="javascript:;" class="link-title">How to Practice the Art of The Grind And a Few More Hacks</a>
-            </div>
-            <div class="link-desc">There is plenty of media in the world already. And no matter what happens to traditional media economics, there’s nothing to stop. There is plenty of media in the world already. And no matter what happens to traditional media economics, there’s nothing to stop…</div>
-            <div class="link-footer">
-              <div class="domain">
-                <img src="https://img.readitlater.com/i/hbr.org/favicon.ico?f=fi">
-                <a href="javascript:;">kvz.io</a>
-              </div>
-
-              <div class="link-controls right aligned">
-                <a href="javascript:;"><i class="trash icon"></i></a>
-              </div>
-            </div>
-          </div>
-
-        </div>
+        
       </div>
 
       <!-- Link saving dialog -->
-      <div class="ui modal add-link-dlg">
+      <div class="ui modal add-link-dlg custom-dialog"id="add-link-dlg">
         <div class="header">Psst! Press ⇧ + ⌘ + Enter for quick collection</div>
-        <div class="image content" style="background-image: url(https://cdn-images-1.medium.com/max/800/1*qUF3hZQFAFtqyYO1pRS0Tw.png)">
-          
-          <div class="description">
-            <p></p>
+        <div class="content-wrapper grid">
+          <div class="column">
+            <form class="ui form" action="" id="link-form" name="link-form">
+              <!-- <div class="loader"></div> -->
+              <div class="loader-container"><div class="loader">Loading...</div></div>
+              <div class="image content link-preview-img" style="">
+              </div>
+              <div class="ui input title-container">
+                <input placeholder="" type="text" id="link-name" name="link-name" class="link-name" />
+              </div>
+              <div class="ui input desc-container">
+                <textarea cols="30" rows="4" id="desc" name="desc" class="desc"></textarea>
+              </div>
+              <input type="hidden" class="" id="link" name="link" />
+              <input type="hidden" class="" id="image-url" name="image-url" />
+            </form>
           </div>
-        </div>
-        <div class="actions">
-          <div class="ui black deny button">
-            Nope
-          </div>
-          <div class="ui positive right labeled icon button">
-            Yep, that's me
-            <i class="checkmark icon"></i>
+          <div class="actions">
+            <button class="ui button ll-button-primary approve">Collect</button>
           </div>
         </div>
       </div>
+
+
     </div>
+
+
+    <script id="link-template" type="text/x-handlebars-template">
+    <div class="column link-item-wrapper">
+        <div class="link-container link-item">
+          <a href="{{url}}" class="link-url" target="_blank"></a>
+          <div class="link-image-wrapper" style="background-image: url({{image_url}});">
+            <a href="{{url}}" class="link-title" target="_blank">{{title}}</a>
+          </div>
+          <div class="link-desc">{{link_desc}}</div>
+          <div class="link-footer">
+            <div class="domain">
+              <img src="https://img.readitlater.com/i/hbr.org/favicon.ico?f=fi">
+              <a href="{{domain}}" class="link-domain">{{domain}}</a>
+            </div>
+
+            <div class="link-controls right aligned">
+              <a href="javascript:;"><i class="trash icon"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
   </body>
 </html>

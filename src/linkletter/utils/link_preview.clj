@@ -6,6 +6,7 @@
             [net.cgrand.enlive-html :as html]
             [clj-http.client :as client]
             [slingshot.slingshot :as sling :only [throw+ try+]]
+            [taoensso.timbre :as log]
             [cheshire.core :refer  [generate-string]]))
 
 (def headers
@@ -18,12 +19,21 @@
 (def url "http://www.99points.info/2010/07/facebook-like-extracting-url-data-with-jquery-ajax-php/")
 (def url2 "https://medium.com/life-learning/how-to-miss-the-point-of-starting-a-business-19faaabf7fc8#.99o8jujp")
 
+(defn handle-http-exceptions
+  "handles clj-http errors"
+  [request-time headers body & msg]
+  (log/warn )
+  msg)
+
 (defn fetch-url 
   "fetches the webpage and returns enlive nodes"
   [url]
   ;(html/html-resource (java.io.StringReader. (slurp  "http://www.99points.info/2010/07/facebook-like-extracting-url-data-with-jquery-ajax-php")))
   ;(html/html-resource (java.io.StringReader  (client/get url headers)))
-  (html/html-resource (java.io.StringReader. (:body  (client/get url headers))))
+  (sling/try+
+    (html/html-resource (java.io.StringReader. (:body  (client/get url headers))))
+    (catch [:status 404] {:keys [request-time headers body]}
+      (handle-http-exceptions request-time headers body "404")))
   ;(spit (slurp "http://aeon.co/magazine/science/the-universal-constants-that-drive-physicists-mad/")
   ;(html/html-resource (java.io.StringReader. (slurp "test.html"))) 
   )
@@ -92,12 +102,13 @@
 ;(get-image-url (fetch-url))
 
 (defn get-link-details
-  "returns a map with title, image-url and link description"
+  "returns a map with url, title, image-url and link description"
   [url]
   (let [page (fetch-url url)]
     {:title (get-title page)
      :image_url (get-image-url page)
-     :desc (get-desc page) }))
+     :desc (get-desc page) 
+     :url url }))
 ;(get-link-details url)
 ;(get-link-details "http://clojure.org/cheatsheet")
 ;(.getHost (java.net.URL. "http://clojure.org/cheatsheet"))

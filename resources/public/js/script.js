@@ -19,8 +19,11 @@ LnkLtr = {
   init: function(){
     var self = this;
     self.fetchLinkList(null,self.linkModule.displayList);
+    self.initPreviewModule();
     //self.linkModule.displayList(list);
     self.bindEvents();
+    self.linkField = $('#link');
+    self.linkField.focus();
   },
   fetchLinkList: function(params, callback){
     /*var callbk = function(response){
@@ -29,32 +32,100 @@ LnkLtr = {
     }*/
     return (LnkLtr.ajax('/links', null, callback)); 
   },
-  showLoader: function(){
-    $('.loader').removeClass('hide');
-  },
-  hideLoader: function(){
-    $('.loader').addClass('hide')
+  initPreviewModule: function(){
+    LnkLtr.previewModal =  $("#add-link-dlg").modal({
+      onHide: function(){
+        console.log('hidden');
+        LnkLtr.previewModal.resetPreviewDialog();
+      },
+      onApprove: function() {
+        console.log('Approve');
+        //TODO if form submitted successfully the return true else throw error depending on the error type
+        var form = $('#link-form'),
+            formData = form.serialize(),
+            submitData = LnkLtr.submitNewLink(formData);
+      } 
+    });
+    var self = LnkLtr.previewModal;
+    self.loader = function(arg){
+      if(arg === 'show'){
+        $(this).find('.loader-container').show();
+      }else if(arg == 'hide'){
+        $(this).find('.loader-container').hide();
+      }else{
+        console.log('Invalid arg for LnkLtr.previewModal.loader() funciton');
+      }
+    };
+    self.loadDataPreviewDialog = function(linkObj){
+      self.resetPreviewDialog();
+      //TODO add image loader and callback to chack if image is available and laod the correct image
+      self.setImage(linkObj.image_url);
+      self.find('.link-name').val(linkObj.title);
+      self.find('.desc').val(linkObj.desc);
+      self.find('#link').val(linkObj.url);
+      console.log(' load dialog called');
+    };
+    self.resetImage = function(){
+      self.find('.link-preview-img').css('background-image', 'url("img/no-image.png")');
+      self.find('#image-url').val('');
+      self.loader('hide');
+    };
+    self.setImage = function(imgUrl){
+      self.find('.link-preview-img').css('background-image', 'url(' + imgUrl + ')');
+      self.find('#image-url').val(imgUrl);
+      self.loader('hide');
+    };
+    self.resetPreviewDialog = function(){
+      //self.find(".link-name").val('');
+      //self.find(".desc").val('');
+      self.find('#link-form')[0].reset();
+      self.resetImage();
+    };
   },
   handleGetLink: function(response){
     console.log('from handleGetLink::::   ', response);
     //TODO check of there is no error in the response
     LnkLtr.linkModule.addPreviewLink(response);
-    LnkLtr.hideLoader();
+    LnkLtr.link = response;
   },
   bindEvents: function(){
     var linkElm = document.getElementById('link');
     var self = this;
-    linkElm.onchange = function(e){
-      if(linkElm.value && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.value))){
-        console.log(e.target.value, " is a valid url");
-        //make a ajax call and get url details
-        var url= '/link/details',
-            data = { url: linkElm.value }; 
-        LnkLtr.linkModule.resetImage();
-        LnkLtr.showLoader();
-        LnkLtr.ajax(url, data, self.handleGetLink);
+    linkElm.onkeypress = function(e){
+      var code = (e.keyCode ? e.keyCode : e.which);
+      if(code == 13) { //Enter keycode
+        
+        if(linkElm.value && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.value))){
+          console.log(e.target.value, " is a valid url");
+          //make a ajax call and get url details
+          var url= '/link/details',
+          data = { url: linkElm.value }; 
+          LnkLtr.previewModal.modal('show');
+          LnkLtr.ajax(url, data, self.handleGetLink);
+        }
       }
-    };
+    }
+  },
+  submitNewLink: function(formData){
+    $.ajax({
+      type: "POST",
+      url: '/',
+      data: formData,
+      success: function( response ){
+          //LnkLtr.linkModule.addNewLink(response);
+          LnkLtr.linkField.val('');
+          LnkLtr.linkModule.addNewLink(response);
+      },
+      error: function( response ){
+        $(".error").text(response.responseJSON.data.error).show()
+          .hide(4000);
+      }
+    });
+  },
+
+  isFormValid: function(formData){
+    console.log('form is valid');
+    return true;
   }
 
 };
@@ -72,41 +143,4 @@ $(document).ready(function(){
     //LnkLtr.linkModule.addNewLink(context);
   //})
 
-  function isFormValid(form){
-    var linkTitle = form.find('.link-label-container');
-    var link = form.find('.link-container');
-    if(linkTitle.children('#link-name').val().length < 1 ){
-      linkTitle.addClass('has-error'); 
-      return false;
-    }
-    linkTitle.removeClass('has-error');
-    if(link.children('#link').val().length < 1 ){
-      link.addClass('has-error'); 
-      return false;
-    }
-    link.removeClass('has-error');
-    return true;
-  }
-
-  var form = $('#link-form');
-  $('button.link-submit').click(function() {
-    if(isFormValid(form)){
-      console.log(form.serialize());
-      $.ajax({
-        type: "POST",
-        url: '/',
-        data: form.serialize(),
-        success: function( response ){
-          if(isUrlPresent(response)){
-            LnkLtr.linkModule.addNewLink(response);
-          }     
-        },
-        error: function( response ){
-
-          $(".error").text(response.responseJSON.data.error).show()
-            .hide(4000);
-        }
-      });
-    }
-  });
 });

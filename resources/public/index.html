@@ -74,7 +74,7 @@
         </div>
     </div>
 
-  <script id="link-template" type="text/x-handlebars-template">
+  <script id="link-template-old" type="text/x-handlebars-template">
     <div class="col-md-4 link-item-wrapper">
       <div class="link-item">
         <a target="_blank" href="{{url}}">
@@ -85,6 +85,27 @@
         </a>
       </div>
     </div>
+  </script>
+  <script id="link-template" type="text/x-handlebars-template">
+  <div class="column link-item-wrapper">
+    <div class="link-container link-item">
+      <a href="{{url}}" class="link-url" target="_blank"></a>
+      <div class="link-image-wrapper" style="background-image: url({{image_url}});">
+        <a href="{{title}}" class="link-title">{{title}}</a>
+      </div>
+      <div class="link-desc"></div>
+      <div class="link-footer">
+        <div class="domain">
+          <img src="https://img.readitlater.com/i/hbr.org/favicon.ico?f=fi">
+          <a href="{{domain}}" class="link-domain">{{domain}}</a>
+        </div>
+
+        <div class="link-controls right aligned">
+          <a href="javascript:;"><i class="trash icon"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
   </script>
 
   
