@@ -6,6 +6,7 @@
             [liberator.core :refer  [defresource resource]]
             [cheshire.core :refer  [generate-string parse-string]]
             [linkletter.home-handler :as home]
+            [linkletter.utils.login :as login]
             [clojure.java.io :as io]
             [clj-time.core :as time]
             [buddy.sign.jws :as jws]
@@ -77,19 +78,13 @@
 
 (defn login
   [request]
-  (let [username (get-in request [:params :username])
-        password (get-in request [:params :password])
-        valid? (some-> authdata
-                       (get (keyword username))
-                       (= password))]
-    (println "*****request object****  " request)
-    (println "inside login funciton " username password)
-    (if valid?
-      (let [claims {:user (keyword username)
-                    :exp (time/plus (time/now) (time/seconds 3600))}
-            token (jws/sign claims secret {:alg :hs512})]
-        (okay {:token token}))
-      (bad-request {:message "wrong auth data"}))))
+  (log/info "\n \n login data" (str  (:params request)))
+  ;; if uesr is valid, if not throw error in ui
+  ;; register in db if new user, then get user data and redirect user to home page
+  (if (login/validate-user? (:params request))
+    ;;(log/info "\n\n Profile data: " (login/register-user (login/get-profile-data (:params request))))
+    (json-response (login/get-user-data (login/register-user (login/get-profile-data (:params request)))))
+    (json-response {:error "Error in loggin in. Please try again"})))
 
 (defn about-page []
   (layout/render "about.html"))

@@ -109,7 +109,4 @@
      :image_url (get-image-url page)
      :desc (get-desc page) 
      :url url }))
-;(get-link-details url)
-;(get-link-details "http://clojure.org/cheatsheet")
-;(.getHost (java.net.URL. "http://clojure.org/cheatsheet"))
 

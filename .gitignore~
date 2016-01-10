@@ -11,4 +11,3 @@ profiles.clj
 *.log
 .DS_Store
 .nrepl-port
-linkletter.log.*

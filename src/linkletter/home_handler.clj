@@ -41,7 +41,7 @@
 
 ; check if link is the same link is already present in the database
 (defn is-url-already-present [url]
-  (prn "insise is-url-already-present")
+  (login/info "insise is-url-already-present")
   (< 0  (get (first
                (db/get-url-count {:url url}))
              :count)))

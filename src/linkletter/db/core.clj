@@ -16,7 +16,6 @@
 (defonce ^:dynamic conn (atom nil))
 
 (conman/bind-connection conn "sql/queries.sql")
-(println "this is a test")
 
 (def pool-spec
   {:adapter    :postgresql
