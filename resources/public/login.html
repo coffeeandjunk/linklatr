@@ -31,16 +31,6 @@
       <link rel="stylesheet" href="css/main.css"/>
 
       <script>
-// This is called with the results from from FB.getLoginStatus().
-window.fbAsyncInit = function() {
-  FB.init({
-    appId      : '826503424132665',
-    cookie     : true,  // enable cookies to allow the server to access 
-    // the session
-    xfbml      : false,  // parse social plugins on this page
-    version    : 'v2.2' // use version 2.2
-  });
-};
 
 // Load the SDK asynchronously
 /*(function(d, s, id) {
@@ -104,6 +94,17 @@ function submitResponse(response){
         
 
 $(document).ready(function(){
+// This is called with the results from from FB.getLoginStatus().
+window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '826503424132665',
+    cookie     : true,  // enable cookies to allow the server to access 
+    // the session
+    xfbml      : false,  // parse social plugins on this page
+    version    : 'v2.2' // use version 2.2
+  });
+};
+
   FB.getLoginStatus(function(response) {
     statusChangeCallback(response);
   });
