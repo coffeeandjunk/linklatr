@@ -73,7 +73,7 @@ function handleFbStatus(response){
 function handleLoginResponse(res){
   //console.log(JSON.stringify(res));
   if(!res.error){
-    //window.location.href="login2.html";
+    window.location.href="login2.html";
   }
 }
 
@@ -95,7 +95,7 @@ function submitResponse(response){
 
 $(document).ready(function(){
 // This is called with the results from from FB.getLoginStatus().
-window.fbAsyncInit = function() {
+//window.fbAsyncInit = function() {
   FB.init({
     appId      : '826503424132665',
     cookie     : true,  // enable cookies to allow the server to access 
@@ -103,16 +103,15 @@ window.fbAsyncInit = function() {
     xfbml      : false,  // parse social plugins on this page
     version    : 'v2.2' // use version 2.2
   });
-};
+//};
 
-  FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-  });
   $("#fb-login").click(function(e){
     e.preventDefault();
     console.log('login button clicked');
     FB.getLoginStatus(handleFbStatus);
   });
+
+	FB.getLoginStatus(handleFbStatus);
 });
       </script>
   </body>

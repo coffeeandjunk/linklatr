@@ -27,9 +27,7 @@
 (defn get-token-debug-data [accessToken]
   (try
     (parse-string (:body (client/get (get-debug-token-url accessToken) {:accept :json})) true)
-    (catch Exception e (log/error (str "Message: "  (.getMessage e) (.toString e)))))
-
-)
+    (catch Exception e (log/error (str "Message: "  (.getMessage e) (.toString e))))))
 
 
 (defn validate-user? [req-data];[{:keys [accessToken userID]}]
