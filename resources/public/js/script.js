@@ -6,13 +6,13 @@ var context = {link: {url: "https%3A%2F%2Fgithub.com%2Fring-clojure%2Fring-codec
   test: "njb"};
 
 
-(function(global){
+/* (function(global){
 	var LnkLtr = global.LnkLtr;
 	if(!LnkLtr){
 		LnkLtr = {};
 		global.LnkLtr = LnkLtr;
 	}
-})(this);
+})(this); */
 
 LnkLtr = {
 

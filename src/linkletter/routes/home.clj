@@ -44,20 +44,12 @@
       (json-response {:data op} 400)))) 
 
 
-;(defn get-user [id]
- ; (db/get-user {:id id}))
-
-;(defresource get-users
-;  :allowed-methods  [:post]
-;  :handle-ok  (fn  [_]  (str "this is a sample text")) 
-;  :available-media-types  ["text/plain"])
-
 (defn home-page []
   ;(layout/render "home.html")
   (res/redirect "index.html"))
 
-(defn get-links []
-  (json-response (home/get-links)))
+(defn get-links [req]
+  (json-response (home/get-links req)))
 
 
 (defn home
@@ -66,11 +58,6 @@
     (throw-unauthorized)
     (okay {:status "Logged" :message (str "hello logged user "
                                         (:identity request))})))
-
-
-(def authdata {:admin "secret"
-               :test "secret"})
-
 
 (defn login-page
   []
@@ -83,7 +70,9 @@
   ;; register in db if new user, then get user data and redirect user to home page
   (if (login/validate-user? (:params request))
     ;;(log/info "\n\n Profile data: " (login/register-user (login/get-profile-data (:params request))))
-    (json-response (login/get-user-data (login/register-user (login/get-profile-data (:params request)))))
+    (do  
+      (res/response (assoc (:session request) :user 4))
+      (json-response (login/get-user-data (login/register-user (login/get-profile-data (:params request))))))
     (json-response {:error "Error in loggin in. Please try again"})))
 
 (defn about-page []
@@ -98,12 +87,11 @@
 
 (defroutes home-routes
   (GET "/" [] (home-page))
-  (GET "/links" [] (get-links))
+  (GET "/links" [request] get-links)
   (GET "/home" [request] home)
   (GET "/link/details*" [request] get-preview-details)
   (POST "/"  [] submit-link)
   (GET "/login" [] (login-page))
   (POST "/login" [request] login)
-  ;(ANY "/users" request get-user)
   (GET "/about" [] (about-page)))
 

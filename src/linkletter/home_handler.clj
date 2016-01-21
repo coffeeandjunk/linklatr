@@ -16,10 +16,12 @@
 
 ; user id is hard-coded for now
 (defn get-user-id []
+  
   1)
 
 (defn escape-string [str]
   (clojure.string/escape str {\< "&lt;", \> "&gt;", \& "&amp;"}))
+
 
 (defn clean-form-data [form-data]
   {:url (escape-string (get form-data :link))
@@ -61,9 +63,10 @@
 
 
 ; get all links from database
-(defn get-links []
+(defn get-links [req]
   ;(doseq [l (db/get-links)]
   ;  (timbre/info (preview/get-link-details  (:url  l))))
+  (log/info "req map in get-links: " req)
   (db/get-links))
 
 
