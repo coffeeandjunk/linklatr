@@ -44,19 +44,11 @@ LnkLtr.linkModule = (function(){
   
 	module.addNewLink = function(linkObj){
 		var linksContainer = $('.collection-page.grid');
-    var linkItemTmpl = $('#link-template');
+    var compiledTempl = LnkLtr.utils.getTemplate('links_templ');
 		//var lastRow = module.getLastRow(linksContainer);
-    var link = module.getNewLink(linkItemTmpl, linkObj);
+    var link = compiledTempl(linkObj)
 
-    //reset form
-    //module.resetForm();
-
-		/* if(lastRow.length > 0 && module.getLinkInRow(lastRow).length < 3 ){
-			module.addToRow(lastRow, link);
-		}else{
-			module.addNewRow(link);
-		} */
-		module.addToRow(linksContainer, link);
+			module.addToRow(linksContainer, link);
 	}
   module.resetImage = function(elm){
      $('#link-preview-container .link-preview').empty();

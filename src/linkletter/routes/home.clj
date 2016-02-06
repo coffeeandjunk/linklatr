@@ -61,7 +61,14 @@
 
 (defn login-page
   []
-  (res/redirect "login.html"))
+  ;(res/redirect "login.html")
+  (layout/render "logintest.html")
+  )
+
+(defn auth
+  [req]
+  (layout/render "home.html")
+  )
 
 (defn login
   [request]
@@ -93,5 +100,6 @@
   (POST "/"  [] submit-link)
   (GET "/login" [] (login-page))
   (POST "/login" [request] login)
+  (GET "/auth" [] auth)
   (GET "/about" [] (about-page)))
 
