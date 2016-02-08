@@ -36,7 +36,7 @@
    :body (generate-string data)})
 
 (defn submit-link [request]
-  (log/info "\n \n submit-link : request: " request)
+  (log/info "\n \n session data>>>>> : request: " (:sesison res/response))
   (let [op (home/insert-link! request)]
     (if-not (contains? op :error)
       (do ( log/info "from submit-link: " op)
@@ -54,20 +54,30 @@
 
 (defn home
   [request]
-  (if-not (authenticated? request)
-    (throw-unauthorized)
-    (okay {:status "Logged" :message (str "hello logged user "
-                                        (:identity request))})))
+  ;(if-not (authenticated? request)
+    ;(throw-unauthorized)
+    ;(okay {:status "Logged" :message (str "hello logged user "
+                                        ;(:identity request))}))
+  (layout/render "home.html")
+  )
 
 (defn login-page
   []
   ;(res/redirect "login.html")
-  (layout/render "logintest.html")
+  (layout/render "login.html")
   )
 
 (defn auth
   [req]
-  (layout/render "home.html")
+  ;(layout/render "home.html")
+  ;(log/info "\n\n FB code:>>>>>>> " (str (:params req)))
+  (login/authenticate (:params req))
+  ;(login/set-user! req {:user "user-data"})
+  
+  (assoc (res/redirect "/home")
+         :session (assoc (:session req) :userid "test id")
+         )
+  
   )
 
 (defn login
@@ -82,8 +92,6 @@
       (json-response (login/get-user-data (login/register-user (login/get-profile-data (:params request))))))
     (json-response {:error "Error in loggin in. Please try again"})))
 
-(defn about-page []
-  (layout/render "about.html"))
 
 (defn get-preview-details
   "fetches the url details"
@@ -93,13 +101,13 @@
 
 
 (defroutes home-routes
-  (GET "/" [] (home-page))
+  (GET "/" [] (home))
   (GET "/links" [request] get-links)
   (GET "/home" [request] home)
-  (GET "/link/details*" [request] get-preview-details)
   (POST "/"  [] submit-link)
-  (GET "/login" [] (login-page))
-  (POST "/login" [request] login)
+  (GET "/login" [] (login-page)) 
+    (GET "/link/details*" [request] get-preview-details)
+  ;(POST "/login" [request] login)
   (GET "/auth" [] auth)
-  (GET "/about" [] (about-page)))
+  )
 

@@ -1,6 +1,7 @@
 (ns linkletter.utils.login
   (:require [linkletter.db.core :as db]
             [ring.util.http-response :refer [ok]]
+            [ring.util.response :as res]
             [linkletter.db.core :as db]
             [ring.util.codec :as codec]
             [taoensso.timbre :as log]
@@ -9,7 +10,7 @@
             [slingshot.slingshot :as sling :only [throw+ try+]]
             [cheshire.core :refer  [generate-string parse-string]]))
 
-
+;; TODO set these data in the env
 (def fb-app-id "826503424132665")
 (def fb-app-secret "2a34196385c9c3d0695f05cf9f3ca2c7")
 (def fb-api-url "https://graph.facebook.com/v2.5/")
@@ -43,6 +44,17 @@
              (= user-id (:user_id (:data debug-token-response))))
       true
       false))))
+
+(defn authenticate
+  "fetch tooken from fb and authenticate user"
+  [code]
+  (log/info " login/authenticate:  " code)
+  )
+(defn set-user!
+  [req user-data]
+  ;(assoc (:session req) :session (assoc :session :user "this is a test id"))
+  (assoc res/response :session (assoc (:session req) :user "this is a test"))
+  )
 
 (defn get-profile-data
   "fetches profile data from the social networking site, currently from fb"
@@ -79,6 +91,8 @@
   (if (check-if-new-user? (:email profile-data))
     (:id (db/insert-user<! profile-data))
     (:id  (first (db/get-user-id {:email (:email profile-data)})))))
+
+
 
 (defn get-user-data [user-id]
   (log/info "user-id in get-user-data >>>>>>> " user-id)
