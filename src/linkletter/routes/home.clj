@@ -68,6 +68,12 @@
   (if (login/user-logged-in? request)
     (res/redirect home)))
 
+(defn obs-link
+  "Obscure link"
+  [req]
+  (layout/render "home.html")
+  )
+
 (defn login-page
   [request]
   ;(res/redirect "login.html")
@@ -134,6 +140,7 @@
   (GET "/login" [request] login-page) 
   (GET "/logout" [] logout) 
   (GET "/link/details*" [request] get-preview-details)
+  (GET "/ojanalink" [request] obs-link)
   ;(POST "/login" [request] login)
   (GET "/auth" [] auth))
 
