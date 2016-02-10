@@ -6,8 +6,6 @@
     <title>Login to Linkletter</title>
     <script src="/assets/jquery/jquery.min.js" type="text/javascript"></script>
     <script src="js/semantic.js" type="text/javascript"></script>
-    <script src="//connect.facebook.net/en_US/sdk.js" type="text/javascript"></script>
-    <script src="js/handlebars.js" type="text/javascript"></script>
 
 		<!-- scripts and styles -->
 		<link rel="stylesheet" type="text/css" href="css/semantic.css">
@@ -25,58 +23,6 @@
 
 
 <script>
-function handleFbStatus(response){
-  console.log('inside handleFbStatus ' + JSON.stringify(response));
-  if(response.status == 'connected'){
-
-    submitResponse(response);
-    //get user deatails and access token
-    FB.api('/me', function(response){
-      console.log("logged in: ", JSON.stringify(response));
-    });
-    //window.location.href = "/login2.html";
-  }else if(response.status == 'not_authorized' || response.status == 'unknown'){
-    FB.login(function(response) {
-      if (response.status === 'connected') {
-        // Logged into your app and Facebook.
-        console.log('connected: ' + JSON.stringify(response));
-        submitResponse(response);
-      } else if (response.status === 'not_authorized') {
-        // The person is logged into Facebook, but not your app.
-        console.log('not authorized ' + JSON.stringify(response));
-      } else {
-        // The person is not logged into Facebook, so we're not sure if
-        // they are logged into this app or not.
-        console.log('not logged in' + JSON.stringify(response));
-
-      }
-    },{scope: 'email'});
-  }
-}
-
-function handleLoginResponse(res){
-  //console.log(JSON.stringify(res));
-  if(!res.error){
-    //window.location.href="login2.html";
-		//console.log(JSON.stringify(res))
-  }
-}
-
-function submitResponse(response){
-    //send response, 
-    // on successful account creation/ authentication of user redirect user to links page
-  response.authResponse.loginType = "FB";
-  $.ajax({
-    method: "POST",
-    url: "/login",
-    data: response.authResponse
-  })
-  .done(handleLoginResponse)
-    .fail(function(){
-      console.log('Error in logggin in, please try again');
-    });
-}
-        
 
 var redirect_url = "https://www.facebook.com/dialog/oauth?"
   + "client_id=826503424132665"
@@ -87,14 +33,7 @@ var redirect_url = "https://www.facebook.com/dialog/oauth?"
 $(document).ready(function(){
 // This is called with the results from from FB.getLoginStatus().
 //window.fbAsyncInit = function() {
-  FB.init({
-    appId      : '826503424132665',
-    cookie     : true,  // enable cookies to allow the server to access 
-    // the session
-    xfbml      : false,  // parse social plugins on this page
-    version    : 'v2.2' // use version 2.2
-  });
-//};
+ //};
 
   $("#fb-login").click(function(e){
     e.preventDefault();
