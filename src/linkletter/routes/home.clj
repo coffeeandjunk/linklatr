@@ -44,70 +44,95 @@
       (json-response {:data op} 400)))) 
 
 
-(defn home-page []
-  ;(layout/render "home.html")
-  (res/redirect "index.html"))
 
 (defn get-links [req]
   (json-response (home/get-links req)))
 
+(defn home-page
+  "redirects to homepage if the user is logged in, else redirects to login page"
+  [request]
+  (log/info "from home/home-page request" request)
+  (if (login/user-logged-in? request)
+    (res/redirect home)))
 
 (defn home
   [request]
   ;(if-not (authenticated? request)
     ;(throw-unauthorized)
     ;(okay {:status "Logged" :message (str "hello logged user "
-                                        ;(:identity request))}))
-  (layout/render "home.html")
-  )
+    (log/debug "from home/home user-logged-in? " (login/user-logged-in? request))
+    (if (login/user-logged-in? request)
+      (do (log/debug "from home/home user logged in") 
+          (layout/render "home.html"))
+      (do (log/debug "from home/home user not logged in")
+          (res/redirect "/login"))))
 
 (defn login-page
-  []
+  [request]
   ;(res/redirect "login.html")
-  (layout/render "login.html")
-  )
+  (if (not  (login/user-logged-in? request))
+    (layout/render "login.html")
+    (res/redirect "/home")))
+
+
+(defn logout
+  [req]
+  (assoc (res/redirect "/login")
+         :session nil))
 
 (defn auth
   [req]
-  ;(layout/render "home.html")
-  ;(log/info "\n\n FB code:>>>>>>> " (str (:params req)))
-  (login/authenticate (:params req))
-  ;(login/set-user! req {:user "user-data"})
-  
-  (assoc (res/redirect "/home")
-         :session (assoc (:session req) :userid "test id")
-         )
-  
-  )
+  ; TODO check if the permission is granted from FB
+  ; if permission granted > authenticate user > set-session > redirect to /home
+  ; :else redirect to login
+  (let [query-params (:params req)]
+    (if (and  (contains? query-params :code) (not (nil? (:code query-params))))
+      (do 
+        (log/debug "From login/auth params contain code" (get-in req [:params :code]))
+        (let [access-token (:access_token (login/get-fb-access-token (get-in req [:params :code])))
+              user-id (login/get-fb-user-id access-token)
+              profile-data (-> (login/get-profile-data {:user-id user-id
+                                                        :access-token access-token})
+                               login/register-user
+                               login/get-user-data)]
+          (assoc (res/redirect "/home")
+                 :session (assoc (:session req) :profile-data profile-data)))) 
+      (do 
+        (log/info "\n From login/auth Permission not granted")      
+        (assoc (res/redirect "/login")
+               :session nil)))))
 
 (defn login
   [request]
   (log/info "\n \n login data" (str  (:params request)))
   ;; if uesr is valid, if not throw error in ui
   ;; register in db if new user, then get user data and redirect user to home page
-  (if (login/validate-user? (:params request))
-    ;;(log/info "\n\n Profile data: " (login/register-user (login/get-profile-data (:params request))))
-    (do  
-      (res/response (assoc (:session request) :user 4))
-      (json-response (login/get-user-data (login/register-user (login/get-profile-data (:params request))))))
-    (json-response {:error "Error in loggin in. Please try again"})))
+  (if (not (login/user-logged-in? request))
+    (json-response (login/get-user-data (login/register-user (login/get-profile-data (:params request)))))
+    (res/redirect "/home")
+    )
+  ;(if (login/validate-user? (:params request))
+  ;  (do  
+  ;   (json-response (login/get-user-data (login/register-user (login/get-profile-data (:params request))))))
+  ;  (json-response {:error "Error in loggin in. Please try again"}))
+  )
 
 
 (defn get-preview-details
   "fetches the url details"
   [request]
-  (log/info ">>>> query-params>>>> " (keywordize-keys  (:query-params request)))
+  (log/debug "from home/get-preview-details request: " request)
   (json-response (home/get-link-preview (:url  (keywordize-keys (:query-params request))))))
 
 
 (defroutes home-routes
-  (GET "/" [] (home))
+  (GET "/" [request] login-page)
   (GET "/links" [request] get-links)
   (GET "/home" [request] home)
   (POST "/"  [] submit-link)
-  (GET "/login" [] (login-page)) 
-    (GET "/link/details*" [request] get-preview-details)
+  (GET "/login" [request] login-page) 
+  (GET "/logout" [] logout) 
+  (GET "/link/details*" [request] get-preview-details)
   ;(POST "/login" [request] login)
-  (GET "/auth" [] auth)
-  )
+  (GET "/auth" [] auth))
 

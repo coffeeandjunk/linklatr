@@ -80,7 +80,8 @@ function submitResponse(response){
 
 var redirect_url = "https://www.facebook.com/dialog/oauth?"
   + "client_id=826503424132665"
-  + "&redirect_uri=http://localhost:3000/auth";
+  + "&redirect_uri=http://localhost:3000/auth"
+  + "&scope=public_profile,email";
 
 $(document).ready(function(){
 // This is called with the results from from FB.getLoginStatus().

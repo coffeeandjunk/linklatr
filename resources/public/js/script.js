@@ -104,7 +104,10 @@ LnkLtr = {
           LnkLtr.ajax(url, data, self.handleGetLink);
         }
       }
-    }
+    };
+    $('.logout-button').click(function(e){
+      window.location.href = "/logout"
+    })
   },
   submitNewLink: function(formData){
     $.ajax({
