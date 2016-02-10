@@ -48,13 +48,6 @@
 (defn get-links [req]
   (json-response (home/get-links req)))
 
-(defn home-page
-  "redirects to homepage if the user is logged in, else redirects to login page"
-  [request]
-  (log/info "from home/home-page request" request)
-  (if (login/user-logged-in? request)
-    (res/redirect home)))
-
 (defn home
   [request]
   ;(if-not (authenticated? request)
@@ -66,6 +59,14 @@
           (layout/render "home.html"))
       (do (log/debug "from home/home user not logged in")
           (res/redirect "/login"))))
+
+
+(defn home-page
+  "redirects to homepage if the user is logged in, else redirects to login page"
+  [request]
+  (log/info "from home/home-page request" request)
+  (if (login/user-logged-in? request)
+    (res/redirect home)))
 
 (defn login-page
   [request]
