@@ -155,9 +155,9 @@
   color: #757575;
 }
 
-/* .add-link-dlg{
-  width: 
-}*/
+.add-link-dlg .header{
+  border-bottom: none !important; 
+}
 
 .ui.button.ll-button-primary{
   background: rgb(62, 175, 175) none repeat scroll 0% 0%;
