@@ -1,0 +1,33 @@
+body{
+  background-color: #293242;
+  color: #fff;
+  height: 100%;
+}
+.about-page-container{
+  background-image: url('../img/about_bg.png');
+  background-position: top center;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+h1{
+  font-size: 36px;
+}
+.about-page{
+  width: 80%;
+  max-width: 620px;
+  margin: 0 auto;
+  padding-top: 5%;
+  font-size: 16px;
+  line-height: 20px;
+}
+.logo{
+  margin: 0 auto;
+  width: 200px;
+}
+.logo img{
+  padding-right: 20px;
+}
+p{
+  letter-spacing: 0.9px;
+}
+
