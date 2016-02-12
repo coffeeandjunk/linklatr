@@ -13,10 +13,10 @@ h1{
   font-size: 36px;
 }
 .about-page{
-  width: 80%;
-  max-width: 620px;
+  /* width: 80%; */
+  max-width: 675px;
   margin: 0 auto;
-  padding-top: 5%;
+  padding-top: 5% !important;
   font-size: 16px;
   line-height: 20px;
 }
