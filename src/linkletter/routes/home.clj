@@ -124,6 +124,10 @@
   ;  (json-response {:error "Error in loggin in. Please try again"}))
   )
 
+(defn about-page
+  [req]
+  (res/redirect "about.html"))
+
 
 (defn get-preview-details
   "fetches the url details"
@@ -140,7 +144,8 @@
   (GET "/login" [request] login-page) 
   (GET "/logout" [] logout) 
   (GET "/link/details*" [request] get-preview-details)
-  (GET "/ojanalink" [request] obs-link)
+  (GET "/ojanalink" [request] obs-link) ;; obscure link
+  (GET "/about" [] about-page) ;; obscure link
   ;(POST "/login" [request] login)
   (GET "/auth" [] auth))
 

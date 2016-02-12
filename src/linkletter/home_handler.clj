@@ -36,7 +36,6 @@
    :title "This is supposed to be the url title"
    })
 
-;(clean-form-data sample-form-data)
 
 (defn get-form-data [req]
   (get req :params))
@@ -55,10 +54,11 @@
       (db/insert-link<! (clean-form-data (get-form-data req))))
     {:error "URL already present"}))
 
-;(defn insert-link! [request] 
- ; (encode-url (get-in request [:params :link])))
-(defn get-link-preview
-  [url]
+ ;(defn insert-link! [request] 
+  ; (encode-url (get-in request [:params :link])))
+
+
+(defn get-link-preview [url]
   (preview/get-link-details url))
 
 
