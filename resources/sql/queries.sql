@@ -28,8 +28,9 @@ INSERT INTO links
 VALUES (:url,  :user_id, :title, :image_url, :desc)
 
 -- name: get-links
--- get all links from db
+-- get all links from db for the given id
 SELECT * from links
+WHERE id = :user-id
 
 
 -- name: get-url-count
@@ -56,4 +57,4 @@ VALUES (:firstname, :lastname, :email, current_timestamp)
 
 -- name: get-user-data
 -- returns the user data
-SELECT * FROM users WHERE id=:id;
+SELECT * FROM users WHERE id=:id

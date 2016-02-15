@@ -1,6 +1,5 @@
 (ns linkletter.home-handler
   (:require [linkletter.db.core :as db]
-            [ring.util.http-response :refer [ok]]
             [ring.util.codec :as codec]
             [taoensso.timbre :as log]
             [linkletter.utils.link-preview :as preview]
@@ -15,9 +14,11 @@
   (codec/url-decode url))
 
 ; user id is hard-coded for now
-(defn get-user-id []
-  
-  1)
+(defn get-user-id 
+  "gets user id from the session"
+  [req]
+  (log/debug "from home_handler/get-user-id request: " req)
+  (get-in req [:session :profile-data :id]))
 
 (defn escape-string [str]
   (clojure.string/escape str {\< "&lt;", \> "&gt;", \& "&amp;"}))
@@ -25,7 +26,7 @@
 
 (defn clean-form-data [form-data]
   {:url (escape-string (get form-data :link))
-   :user_id (get-user-id)
+   ;:user_id (get-user-id)
    :title (escape-string (get form-data :link-name))
    :desc (escape-string (get form-data :desc))
    :image_url (escape-string (get form-data :image-url))})
@@ -50,8 +51,9 @@
 (defn insert-link! [req]
   (if (not (is-url-already-present (:link (:params req))))
     (do 
-      ;(log/info "get-link-details >>>>>> " (merge (clean-form-data (get-form-data req)) (preview/get-link-details (:link (:params req)))))
-      (db/insert-link<! (clean-form-data (get-form-data req))))
+      (let [form-data (clean-form-data (get-form-data req))]
+      (log/debug "from insert-link! user-id::" (get-user-id req))
+      (db/insert-link<! (assoc form-data :user_id (get-user-id req)))))
     {:error "URL already present"}))
 
  ;(defn insert-link! [request] 
@@ -66,7 +68,10 @@
 (defn get-links [req]
   ;(doseq [l (db/get-links)]
   ;  (timbre/info (preview/get-link-details  (:url  l))))
-  (log/info "req map in get-links: " req)
-  (db/get-links))
+  (let [ user-id (get-user-id req)]
+  (log/info "req map in user-id:: " user-id)
+  (db/get-links  {:user-id user-id})))
+
+
 
 
