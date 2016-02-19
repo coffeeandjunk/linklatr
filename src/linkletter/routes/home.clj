@@ -36,7 +36,7 @@
    :body (generate-string data)})
 
 (defn submit-link [request]
-  (log/info "\n \n session data>>>>> : request: " (:sesison res/response))
+  (log/info "from home/submit-link session data>>>>> : request: " (:sesison res/response))
   (let [op (home/insert-link! request)]
     (if-not (contains? op :error)
       (do ( log/info "from submit-link: " op)

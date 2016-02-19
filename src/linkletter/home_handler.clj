@@ -43,17 +43,41 @@
 
 ; check if link is the same link is already present in the database
 (defn is-url-already-present [url]
-  (log/info "insise is-url-already-present")
+  (log/info "inside is-url-already-present")
   (< 0  (get (first
                (db/get-url-count {:url url}))
              :count)))
 
+(defn update-user-link-tables
+  "upadtes u2l and l2u tables for link and user mappings"
+  [{:keys [user-id link-id]}]
+  1)
+
+(defn insert-into-l2u<!
+  "inserts into l2u table the link id and the corresponding user-id"
+  [{:keys [id user_id]}]
+  (log/debug (str "from insert-into-l2u<! id: " id "  user_id: " user_id))
+  (db/insert-link2user<! {:lid id :uid user_id}))
+
+;(defn insert-into-u2l<!
+  ;"inserts into u2l table"
+  ;[{:keys [lid uid]}]
+  ;(db/insert-user2link<! {:uid uid :lid lid})
+  ;)
+
+
 (defn insert-link! [req]
+  (log/debug "from home_handler/insert-link! :params " (:params req))
   (if (not (is-url-already-present (:link (:params req))))
     (do 
-      (let [form-data (clean-form-data (get-form-data req))]
-      (log/debug "from insert-link! user-id::" (get-user-id req))
-      (db/insert-link<! (assoc form-data :user_id (get-user-id req)))))
+      (let [form-data (clean-form-data (get-form-data req))
+            user-id (get-user-id req)]
+      (log/debug "from insert-link! user-id::" form-data)
+      ;(let [link-data (db/insert-link<! (assoc form-data :user_id user-id))]) 
+      (->> (db/insert-link<! (assoc form-data :user_id user-id))
+          (insert-into-l2u<!) 
+          (log/debug "from home_handler/insert-link! inset-into-l2u<! data: " ))
+      ))
     {:error "URL already present"}))
 
  ;(defn insert-link! [request] 
@@ -65,13 +89,15 @@
 
 
 ; get all links from database
-(defn get-links [req]
-  ;(doseq [l (db/get-links)]
-  ;  (timbre/info (preview/get-link-details  (:url  l))))
+; TODO change the function after modifiying the schema
+; TODO modify the function to accept user-id instead of req map
+(defn get-links 
+  "gets all links for the current user"
+  [req]
   (let [ user-id (get-user-id req)]
-  (log/info "req map in user-id:: " user-id)
-  (db/get-links  {:user-id user-id})))
+  (log/info "from home_handler/get-links user-id: " user-id)
+  (db/get-links  {:user_id user-id})))
 
-
+;(db/get-links {:user_id 14})
 
 

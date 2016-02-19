@@ -30,12 +30,23 @@ VALUES (:url,  :user_id, :title, :image_url, :desc)
 -- name: get-links
 -- get all links from db for the given id
 SELECT * from links
-WHERE id = :user-id
+WHERE user_id = :user_id
 
 
 -- name: get-url-count
 -- get count for the given url
 select count(*) from links where url like :url
+
+-- name: insert-link2user<!
+-- inserts in the l2u table for a new link
+INSERT INTO l2u
+(lid, uid) values(:lid, :uid)
+
+
+-- name: insert-user2link<!
+-- inserts in the l2u table for a new link
+INSERT INTO l2u
+(lid, uid) values(:lid, :uid)
 
 
 -- name: get-user-count

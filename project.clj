@@ -70,5 +70,6 @@
    :project/test {:env {:test       true
                         :port       3001
                         :nrepl-port 7001}}
-   :profiles/dev {}
-   :profiles/test {}})
+   ;:profiles/dev {}
+   ;:profiles/test {}
+   })

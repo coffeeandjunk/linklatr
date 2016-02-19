@@ -15,8 +15,8 @@
 (def fb-app-secret "2a34196385c9c3d0695f05cf9f3ca2c7")
 (def fb-api-url "https://graph.facebook.com/v2.5/")
 (def fb-userid-url "https://graph.facebook.com/v2.5/me?access_token=")
-;(def redirect-url "http://localhost:3000/auth") ;TODO set it from env variables for production
-(def redirect-url "http://linkletter.co/auth") 
+(def redirect-url "http://localhost:3000/auth") ;TODO set it from env variables for production
+;(def redirect-url "http://linkletter.co/auth") 
 
 
 (def fb-token-url 
