@@ -24,18 +24,22 @@ WHERE id = :id
 -- name: insert-link<!
 -- creates a new link record
 INSERT INTO links
-(url, user_id, title, image_url, link_desc)
-VALUES (:url,  :user_id, :title, :image_url, :desc)
+(url, title, image_url, link_desc)
+VALUES (:url, :title, :image_url, :desc)
 
 -- name: get-links
 -- get all links from db for the given id
 SELECT * from links
 WHERE user_id = :user_id
 
+-- name: get-url-mapping-count 
+-- gets the count for the given link-id and the user-id
+SELECT count(*) from l2u WHERE 
+Lid = :lid AND Uid = :uid
 
 -- name: get-url-count
 -- get count for the given url
-select count(*) from links where url like :url
+select id from links where url like :url
 
 -- name: insert-link2user<!
 -- inserts in the l2u table for a new link

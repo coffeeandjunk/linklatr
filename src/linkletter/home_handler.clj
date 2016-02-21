@@ -13,7 +13,6 @@
 (defn decode-url [url]
   (codec/url-decode url))
 
-; user id is hard-coded for now
 (defn get-user-id 
   "gets user id from the session"
   [req]
@@ -41,23 +40,25 @@
 (defn get-form-data [req]
   (get req :params))
 
-; check if link is the same link is already present in the database
-(defn is-url-already-present [url]
-  (log/info "inside is-url-already-present")
-  (< 0  (get (first
-               (db/get-url-count {:url url}))
-             :count)))
+(defn url-present-in-db? 
+  "Check if the url is already added by some user"
+  [url]
+  (log/debug "inside home_handler/url-present-in-db?")
+  ;(< 0  (get (first (db/get-url-count {:url url})) :id))
+  (-> {:url url}
+      db/get-url-count
+      first
+      (get :id)))
 
-(defn update-user-link-tables
-  "upadtes u2l and l2u tables for link and user mappings"
-  [{:keys [user-id link-id]}]
-  1)
+;(def url "http://firstround.com/review/this-company-retains-95-percent-of-its-employees-heres-its-secret/?ct=t%28How_Does_Your_Leadership_Team_Rate_12_3_2015%29")
+;(url-present-in-db? url)
 
-(defn insert-into-l2u<!
+
+(defn update-user-link-db! 
   "inserts into l2u table the link id and the corresponding user-id"
   [{:keys [id user_id]}]
   (log/debug (str "from insert-into-l2u<! id: " id "  user_id: " user_id))
-  (db/insert-link2user<! {:lid id :uid user_id}))
+  (:id (db/insert-link2user<! {:lid id :uid user_id})))
 
 ;(defn insert-into-u2l<!
   ;"inserts into u2l table"
@@ -65,20 +66,40 @@
   ;(db/insert-user2link<! {:uid uid :lid lid})
   ;)
 
-
-(defn insert-link! [req]
-  (log/debug "from home_handler/insert-link! :params " (:params req))
-  (if (not (is-url-already-present (:link (:params req))))
-    (do 
-      (let [form-data (clean-form-data (get-form-data req))
-            user-id (get-user-id req)]
-      (log/debug "from insert-link! user-id::" form-data)
-      ;(let [link-data (db/insert-link<! (assoc form-data :user_id user-id))]) 
-      (->> (db/insert-link<! (assoc form-data :user_id user-id))
-          (insert-into-l2u<!) 
-          (log/debug "from home_handler/insert-link! inset-into-l2u<! data: " ))
+(defn mapped-to-user?
+  "check if the given link-id is already mapped to the current user"
+  [link-id user-id]
+  (log/debug "from mapped-to-user? link-id user-id :" link-id user-id)
+  (-> {:lid link-id :uid user-id}
+      db/get-url-mapping-count
+      first
+      (get :count)
+      (> 0)
       ))
-    {:error "URL already present"}))
+
+;(mapped-to-user? 87 14)
+
+; TODO try to further simplyfy the insert function
+(defn insert-link! 
+  "inserts link to db if new link or else just maps the existing link to the current user, returns link id"
+  [req]
+  (log/debug "from home_handler/insert-link! :params " (:params req))
+  (let [user-id (get-user-id req)]
+    (if-let [link-id (url-present-in-db? (get-in req [:params :link]))]
+      (if (mapped-to-user? link-id user-id) 
+        (do  
+          (log/debug " already mapped to the user")
+          {:error "You have alredy collected this link" :link-id link-id})        
+        (do  
+          (log/debug "inside second else block link-id user-id: " link-id user-id)
+          (update-user-link-db! {:id link-id  :user_id user-id}))
+        )
+      (do 
+        (log/debug "from insert-link! else block")
+        (let [link-data (db/insert-link<! (assoc (clean-form-data (get-form-data req)) 
+                                                 :user_id user-id))]
+          (update-user-link-db! {:id (:id link-data) :user_id user-id}))
+        ))))
 
  ;(defn insert-link! [request] 
   ; (encode-url (get-in request [:params :link])))
