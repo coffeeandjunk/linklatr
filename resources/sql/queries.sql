@@ -29,8 +29,10 @@ VALUES (:url, :title, :image_url, :desc)
 
 -- name: get-links
 -- get all links from db for the given id
-SELECT * from links
-WHERE user_id = :user_id
+SELECT  links.id, links.url, links.title, links.link_desc, links.image_url, l2u.uid 
+FROM links INNER JOIN l2u ON 
+l2u.lid = links.id AND l2u.uid = :user_id
+
 
 -- name: get-url-mapping-count 
 -- gets the count for the given link-id and the user-id

@@ -82,11 +82,19 @@ LnkLtr = {
       self.resetImage();
     };
   },
+  handleError: function(error){
+    var msg = error.msg || "";
+    Lnkltr.uutils.showError(msg);
+  },
   handleGetLink: function(response){
     console.log('from handleGetLink::::   ', response);
     //TODO check of there is no error in the response
-    LnkLtr.linkModule.addPreviewLink(response);
-    LnkLtr.link = response;
+    if(!response.error){
+      LnkLtr.linkModule.addPreviewLink(response);
+      LnkLtr.link = response;
+    }else{
+     Lnkltr.handleError(response.error);  
+    }
   },
   bindEvents: function(){
     var linkElm = document.getElementById('link');
