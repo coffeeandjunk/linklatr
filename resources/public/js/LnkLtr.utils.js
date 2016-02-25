@@ -16,6 +16,7 @@
 
   LnkLtr.utils = LnkLtr.utils || {};
 
+  // trims white spaces and removes slashes if present at the end of the url
   LnkLtr.utils.sanitizeUrl = function(urlStr){
     return urlStr.trim().replace(/\/$/, '');
   }

@@ -1,35 +1,29 @@
 var context = {link: {url: "https%3A%2F%2Fgithub.com%2Fring-clojure%2Fring-codec",
-    user_id: 1,
-      title: "This is supposed to be the url title",
-			domain: "www.medium.com"
-  },
+  user_id: 1,
+  title: "This is supposed to be the url title",
+  domain: "www.medium.com"
+},
   test: "njb"};
 
 
-/* (function(global){
-	var LnkLtr = global.LnkLtr;
-	if(!LnkLtr){
-		LnkLtr = {};
-		global.LnkLtr = LnkLtr;
-	}
-})(this); */
+(function(global){
+  var LnkLtr = global.LnkLtr;
+  if(!LnkLtr){
+    LnkLtr = {};
+    global.LnkLtr = LnkLtr;
+  }
+})(this); 
 
 LnkLtr = {
-
   init: function(){
     var self = this;
     self.fetchLinkList(null,self.linkModule.displayList);
     self.initPreviewModule();
-    //self.linkModule.displayList(list);
     self.bindEvents();
     self.linkField = $('#link');
     self.linkField.focus();
   },
   fetchLinkList: function(params, callback){
-    /*var callbk = function(response){
-      console.log("response>>>> ", response);
-      return response;
-    }*/
     return (LnkLtr.ajax('/links', null, callback)); 
   },
   initPreviewModule: function(){
@@ -42,8 +36,8 @@ LnkLtr = {
         console.log('Approve');
         //TODO if form submitted successfully the return true else throw error depending on the error type
         var form = $('#link-form'),
-            formData = form.serialize(),
-            submitData = LnkLtr.submitNewLink(formData);
+        formData = form.serialize(),
+        submitData = LnkLtr.submitNewLink(formData);
       } 
     });
     var self = LnkLtr.previewModal;
@@ -93,16 +87,17 @@ LnkLtr = {
       LnkLtr.linkModule.addPreviewLink(response);
       LnkLtr.link = response;
     }else{
-     Lnkltr.handleError(response.error);  
+      Lnkltr.handleError(response.error);  
     }
   },
   bindEvents: function(){
     var linkElm = document.getElementById('link');
     var self = this;
+    //show linkpreview dialog on pressing enter ker
     linkElm.onkeypress = function(e){
       var code = (e.keyCode ? e.keyCode : e.which);
       if(code == 13) { //Enter keycode
-        
+
         if(linkElm.value && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.value))){
           console.log(e.target.value, " is a valid url");
           //make a ajax call and get url details
@@ -113,9 +108,13 @@ LnkLtr = {
         }
       }
     };
+    //bind logout button action
     $('.logout-button').click(function(e){
       window.location.href = "/logout"
-    })
+    });
+
+      //bind delete action
+    $('.collection-page').on('click','.link-container .link-footer a:first-child',function(e){ LnkLtr.deleteLink(e); })
   },
   submitNewLink: function(formData){
     $.ajax({
@@ -123,9 +122,9 @@ LnkLtr = {
       url: '/',
       data: formData,
       success: function( response ){
-          //LnkLtr.linkModule.addNewLink(response);
-          LnkLtr.linkField.val('');
-          LnkLtr.linkModule.addNewLink(response);
+        //LnkLtr.linkModule.addNewLink(response);
+        LnkLtr.linkField.val('');
+        LnkLtr.linkModule.addNewLink(LnkLtr.linkModule.getLinkTemplate(), response);
       },
       error: function( response ){
         $(".error").text(response.responseJSON.data.error).show()
@@ -133,11 +132,30 @@ LnkLtr = {
       }
     });
   },
-
   isFormValid: function(formData){
     console.log('form is valid');
     return true;
-  }
+  },
+    deleteLink: function(e){
+      console.log("from delteLink funciton e ", e);
+      var linkItem =  $(e.target).closest('.link-item');
+      var data = {linId:linkItem.data('link-id')};
+      console.log(data);
+      LnkLtr.linkModule.delteLink(linkItem.parent());
+      $.ajax({
+        type: "DELETE",
+        url: '/link/' + linkItem.data('link-id'),
+        data: data,
+        success: function( response ){
+          LnkLtr.linkModule.delteLink(linkItem);
+        },
+        error: function( response ){
+          $(".error").text(response.responseJSON.data.error).show()
+            .hide(4000);
+        }
+      });
+
+    }
 
 };
 
@@ -151,7 +169,7 @@ $(document).ready(function(){
 
   // TODO remove this code
   //$('.dummy').click(function(){
-    //LnkLtr.linkModule.addNewLink(context);
+  //LnkLtr.linkModule.addNewLink(context);
   //})
 
 });

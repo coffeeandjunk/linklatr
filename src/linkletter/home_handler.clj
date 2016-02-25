@@ -66,16 +66,15 @@
   ;(db/insert-user2link<! {:uid uid :lid lid})
   ;)
 
-(defn mapped-to-user?
-  "check if the given link-id is already mapped to the current user"
+(defn link-mapped-to-user?
+  "check if the given link-id is already mapped to the given user"
   [link-id user-id]
   (log/debug "from mapped-to-user? link-id user-id :" link-id user-id)
   (-> {:lid link-id :uid user-id}
       db/get-url-mapping-count
       first
       (get :count)
-      (> 0)
-      ))
+      (> 0)))
 
 ;(mapped-to-user? 87 14)
 
@@ -86,7 +85,7 @@
   (log/debug "from home_handler/insert-link! :params " (:params req))
   (let [user-id (get-user-id req)]
     (if-let [link-id (url-present-in-db? (get-in req [:params :link]))]
-      (if (mapped-to-user? link-id user-id) 
+      (if (link-mapped-to-user? link-id user-id) 
         (do  
           (log/debug " already mapped to the user")
           {:error "You have alredy collected this link" :link-id link-id})        
@@ -119,6 +118,39 @@
   (log/info "from home_handler/get-links user-id: " user-id)
   (db/get-links  {:user_id user-id})))
 
-;(db/get-links {:user_id 14})
+(defn delete-link-from-db!
+  "deletes a link from the db permanently"
+  [link-id]
+  (db/delete-link! {:lid link-id})
+  )
+
+(defn link-mapped-to-any-user?
+  "returns if the link-id is mapped to a user"
+  [link-id]
+  (-> {:lid link-id}
+      db/link-map-count
+      first
+      (get :count)
+      (> 0)))
+
+;(link-mapped-to-any-user? 77)
+;(db/link-map-count {:lid 77})
+
+
+(defn delete-link!
+  "removes mapping between the given user-id and the given link-id, retains the link if some user is still using it"
+  [link-id user-id]
+  (let 
+    [l2u-delete-count (db/delete-mapping-for-link! {:lid link-id :uid user-id})]
+    (if (link-mapped-to-any-user? link-id)
+      (do (log/info "from home_handler/delete-link! if block")
+        (Integer/parseInt  l2u-delete-count))
+      (do (log/info "from home_handler/delete-link! else block" link-id) 
+          (delete-link-from-db! link-id)
+          (Integer/parseInt l2u-delete-count)))))
+
+;(link-mapped-to-any-user? 77)
+;(delete-link-from-db! 77)
+;(delete-link! 87 14)
 
 

@@ -1,6 +1,6 @@
 (ns linkletter.routes.home
   (:require [linkletter.layout :as layout]
-            [compojure.core :refer [defroutes GET POST ANY]]
+            [compojure.core :refer [defroutes GET POST DELETE PATCH ANY]]
             [ring.util.http-response :refer [ok]]
             [ring.util.response :as res]
             [liberator.core :refer  [defresource resource]]
@@ -135,12 +135,23 @@
   (log/debug "from home/get-preview-details request: " request)
   (json-response (home/get-link-preview (:url  (keywordize-keys (:query-params request))))))
 
+(defn handle-delete
+  "deletes the link for the given id for the current user"
+  [req]
+  (let [user-id (home/get-user-id req)
+        ; TODO fix this, get the link-id from the path
+        link-id (Integer/parseInt (:id (:params req)))
+        ]
+  (log/info  (str "form delte-link user-id link-id " (class user-id) (class link-id)))
+  (home/delete-link! link-id user-id))
+  {:status 204})
 
 (defroutes home-routes
   (GET "/" [request] login-page)
   (GET "/links" [request] get-links)
   (GET "/home" [request] home)
   (POST "/"  [] submit-link)
+  (DELETE "/link/:id"  [] handle-delete)
   (GET "/login" [request] login-page) 
   (GET "/logout" [] logout) 
   (GET "/link/details*" [request] get-preview-details)

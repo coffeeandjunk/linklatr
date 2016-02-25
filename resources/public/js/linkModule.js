@@ -42,12 +42,9 @@ LnkLtr.linkModule = (function(){
      module.resetImage();
   }
   
-	module.addNewLink = function(linkObj){
+	module.addNewLink = function(compiledTempl, linkObj){
 		var linksContainer = $('.collection-page.grid');
-    var compiledTempl = LnkLtr.utils.getTemplate('links_templ');
-		//var lastRow = module.getLastRow(linksContainer);
-    var link = compiledTempl(linkObj)
-
+    var link = compiledTempl(linkObj) 
 			module.addToRow(linksContainer, link);
 	}
   module.resetImage = function(elm){
@@ -62,11 +59,18 @@ LnkLtr.linkModule = (function(){
     LnkLtr.previewModal.loadDataPreviewDialog(linkObj);
   }
 
+  module.delteLink = function(linkelm){
+    linkelm.remove();
+  }
+
+  module.getLinkTemplate = function(){
+    return LnkLtr.utils.getTemplate('links_templ'); //fetches the link template and compiles it
+  }
+
   module.displayList = function(list){
     console.log('From displayList>>> ', list);
-    var linkItemTmpl = $('#link-template');
     $.each(list, function(idx, obj){
-      module.addNewLink(obj);
+      module.addNewLink(module.getLinkTemplate(), obj);
     });
   }
 	return module;

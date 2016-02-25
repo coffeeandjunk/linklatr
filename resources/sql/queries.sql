@@ -39,6 +39,11 @@ l2u.lid = links.id AND l2u.uid = :user_id
 SELECT count(*) from l2u WHERE 
 Lid = :lid AND Uid = :uid
 
+-- name: link-map-count
+-- gets the count for the given link-id and the user-id
+SELECT count(*) from l2u WHERE 
+Lid = :lid 
+
 -- name: get-url-count
 -- get count for the given url
 select id from links where url like :url
@@ -74,4 +79,15 @@ VALUES (:firstname, :lastname, :email, current_timestamp)
 
 -- name: get-user-data
 -- returns the user data
-SELECT * FROM users WHERE id=:id
+SELECT * FROM users WHERE id = :id
+
+
+-- name: delete-mapping-for-link!
+-- deletes the row in l2u table for given link_id and user_id
+DELETE from l2u
+WHERE lid = :lid AND uid = :uid
+
+-- name: delete-link!
+-- deletes the link from the links table
+DELETE from links
+WHERE id = :lid 
