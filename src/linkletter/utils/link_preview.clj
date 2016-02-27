@@ -92,15 +92,6 @@
           (not (nil? (get-desc-from-meta page)))(get-desc-from-meta page) 
           :else (get-desc-from-body page))))
 
-
-  
-  ;(filter #(max (count %)) (html/texts (get-elements-by-tag  (fetch-url) "div")))
-  
-
-;(get-title (fetch-url))
-
-;(get-image-url (fetch-url))
-
 (defn get-link-details
   "returns a map with url, title, image-url and link description"
   [url]

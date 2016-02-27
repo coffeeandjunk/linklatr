@@ -100,10 +100,6 @@
           (update-user-link-db! {:id (:id link-data) :user_id user-id})  
           link-data)))))
 
- ;(defn insert-link! [request] 
-  ; (encode-url (get-in request [:params :link])))
-
-
 (defn get-link-preview [url]
   (preview/get-link-details url))
 
