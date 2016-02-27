@@ -33,6 +33,11 @@ SELECT  links.id, links.url, links.title, links.link_desc, links.image_url, l2u.
 FROM links INNER JOIN l2u ON 
 l2u.lid = links.id AND l2u.uid = :user_id
 
+--name: get-link-details
+-- fetches all details for a given link-id
+SELECT id, url, image_url, title, link_desc
+FROM links WHERE id = :lid
+
 
 -- name: get-url-mapping-count 
 -- gets the count for the given link-id and the user-id

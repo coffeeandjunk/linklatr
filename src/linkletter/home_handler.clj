@@ -91,14 +91,14 @@
           {:error "You have alredy collected this link" :link-id link-id})        
         (do  
           (log/debug "inside second else block link-id user-id: " link-id user-id)
-          (update-user-link-db! {:id link-id  :user_id user-id}))
-        )
+          (update-user-link-db! {:id link-id  :user_id user-id})
+          (db/get-link-details {:lid  link-id})))
       (do 
         (log/debug "from insert-link! else block")
         (let [link-data (db/insert-link<! (assoc (clean-form-data (get-form-data req)) 
                                                  :user_id user-id))]
-          (update-user-link-db! {:id (:id link-data) :user_id user-id}))
-        ))))
+          (update-user-link-db! {:id (:id link-data) :user_id user-id})  
+          link-data)))))
 
  ;(defn insert-link! [request] 
   ; (encode-url (get-in request [:params :link])))

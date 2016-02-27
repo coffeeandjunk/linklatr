@@ -1,10 +1,3 @@
-var context = {link: {url: "https%3A%2F%2Fgithub.com%2Fring-clojure%2Fring-codec",
-  user_id: 1,
-  title: "This is supposed to be the url title",
-  domain: "www.medium.com"
-},
-  test: "njb"};
-
 
 (function(global){
   var LnkLtr = global.LnkLtr;
@@ -85,7 +78,7 @@ LnkLtr = {
     //TODO check of there is no error in the response
     if(!response.error){
       LnkLtr.linkModule.addPreviewLink(response);
-      LnkLtr.link = response;
+      //LnkLtr.link = response;
     }else{
       Lnkltr.handleError(response.error);  
     }
@@ -97,9 +90,7 @@ LnkLtr = {
     linkElm.onkeypress = function(e){
       var code = (e.keyCode ? e.keyCode : e.which);
       if(code == 13) { //Enter keycode
-
         if(linkElm.value && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.value))){
-          console.log(e.target.value, " is a valid url");
           //make a ajax call and get url details
           var url= '/link/details',
           data = { url: linkElm.value }; 
