@@ -71,8 +71,10 @@
 (defn obs-link
   "Obscure link"
   [req]
-  (layout/render "home.html")
-  )
+  ;; sets a session with the hard-coded user details
+  (let [ojana-user {:email "oajana.user@gmail.com", :first_name "Ojana", :admin nil, :id 1, :last_name "User", :pass nil}]
+    (assoc (res/redirect "/home")
+           :session (assoc (:session req) :profile-data ojana-user))))
 
 (defn login-page
   [request]

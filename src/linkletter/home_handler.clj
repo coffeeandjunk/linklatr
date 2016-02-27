@@ -142,7 +142,7 @@
   [link-id user-id]
   (let 
     [l2u-delete-count (db/delete-mapping-for-link! {:lid link-id :uid user-id})]
-    (when (link-mapped-to-any-user? link-id)
+    (when (not (link-mapped-to-any-user? link-id))
       (do (log/info "from home_handler/delete-link! when block" link-id) 
           (delete-link-from-db! link-id)))))
 
