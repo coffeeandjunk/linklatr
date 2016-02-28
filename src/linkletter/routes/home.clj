@@ -72,9 +72,11 @@
   "Obscure link"
   [req]
   ;; sets a session with the hard-coded user details
-  (let [ojana-user {:email "oajana.user@gmail.com", :first_name "Ojana", :admin nil, :id 1, :last_name "User", :pass nil}]
+  (let [ojana-user {:email "oajana.user@gmail.com", :first_name "Ojana", :admin nil, :id 5, :last_name "User", :pass nil}]
     (assoc (res/redirect "/home")
-           :session (assoc (:session req) :profile-data ojana-user))))
+           :session (assoc (:session req) :profile-data ojana-user)))
+  ;(layout/render "home.html")
+  )
 
 (defn login-page
   [request]
@@ -148,6 +150,16 @@
   (home/delete-link! link-id user-id))
   {:status 204})
 
+(defn handle-link
+  "inserts new link submitted through the extension"
+  [req]
+  ;(log/info "from home/handle-link " req)
+  (let [profile-data {:id  (Integer/parseInt (get-in req [:params :user-id]))}]
+    (home/insert-link! (assoc  req 
+                              :session {:profile-data profile-data}))
+     (log/info "profile-data" profile-data)
+    (json-response {:success true})))
+
 (defroutes home-routes
   (GET "/" [request] login-page)
   (GET "/links" [request] get-links)
@@ -159,6 +171,9 @@
   (GET "/link/details*" [request] get-preview-details)
   (GET "/ojanalink" [request] obs-link) ;; obscure link
   (GET "/about" [] about-page) ;; obscure link
-  ;(POST "/login" [request] login)
-  (GET "/auth" [] auth))
+  (GET "/auth" [] auth)
+  ;; routes for extension
+  ;; TODO group them together
+  (POST "/link" [] handle-link)
+  )
 
