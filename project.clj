@@ -10,9 +10,8 @@
                  [markdown-clj "0.9.68"]
                  [environ "1.0.0"]
                  [compojure "1.4.0"]
-                 [liberator "0.13"]
                  [cheshire "5.5.0"]
-                 [lib-noir "0.9.9"]
+                 ;[lib-noir "0.9.9"]
                  [ring-webjars "0.1.1"]
                  [ring/ring-defaults "0.1.5"]
                  [ring-ttl-session "0.1.1"]
@@ -21,14 +20,14 @@
                  [ring/ring-codec "1.0.0"]
                  [metosin/ring-middleware-format "0.6.0"]
                  [metosin/ring-http-response "0.6.3"]
-                 [bouncer "0.3.3"]
+                 ;[bouncer "0.3.3"]
                  [prone "0.8.2"]
                  [org.clojure/tools.nrepl "0.2.10"]
-                 [org.webjars/bootstrap "3.3.5"]
+                 ;[org.webjars/bootstrap "3.3.5"]
                  [org.webjars/jquery "2.1.4"]
                  [buddy "0.6.2"]
                  [clj-time "0.11.0"]
-                 [migratus "0.8.4"]
+                 [migratus "0.8.12"]
                  [conman "0.1.6"]
                  [org.postgresql/postgresql "9.3-1102-jdbc41"]
                  [yesql "0.5.2"]
@@ -45,8 +44,8 @@
   :main linkletter.core
   :migratus {:store :database}
 
-  :plugins [[lein-environ "1.0.0"]
-            [migratus-lein "0.1.7"]]
+  :plugins [[lein-environ "1.0.2"]
+            [migratus-lein "0.2.6"]]
 
   :profiles
   {:uberjar {:omit-source true
@@ -70,6 +69,4 @@
    :project/test {:env {:test       true
                         :port       3001
                         :nrepl-port 7001}}
-   ;:profiles/dev {}
-   ;:profiles/test {}
    })

@@ -3,7 +3,7 @@
             [compojure.core :refer [defroutes GET POST DELETE PATCH ANY]]
             [ring.util.http-response :refer [ok]]
             [ring.util.response :as res]
-            [liberator.core :refer  [defresource resource]]
+            ;[liberator.core :refer  [defresource resource]]
             [cheshire.core :refer  [generate-string parse-string]]
             [linkletter.home-handler :as home]
             [linkletter.utils.login :as login]
@@ -17,15 +17,7 @@
             [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]))
 
 
-(def users (atom  ["foo" "bar" "moo"]))
-(def secret "mysupersecret")
 
-(def json-map {"url" "test url"})
-(def clj-map {:a 1 :b 3})
-(defn tt []
-  (generate-string clj-map))
-(defn tt1 []
-  (parse-string json-map))
 
 (defn okay [d] {:status 200 :body d})
 (defn bad-request [d] {:status 400 :body d})
