@@ -1,7 +1,7 @@
 (defproject linkletter "0.1.0-SNAPSHOT"
 
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Linkletter"
+  :url "Linkletter.co"
 
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [selmer "0.8.9"]
@@ -45,7 +45,8 @@
   :migratus {:store :database}
 
   :plugins [[lein-environ "1.0.2"]
-            [migratus-lein "0.2.6"]]
+            [migratus-lein "0.2.6"]
+            [lein-pprint "1.1.1"]]
 
   :profiles
   {:uberjar {:omit-source true
@@ -53,6 +54,7 @@
              :aot :all}
    :dev           [:project/dev :profiles/dev]
    :test          [:project/test :profiles/test]
+   :production [:uberjar :profiles/production]
    :project/dev  {:dependencies [[ring/ring-mock "0.2.0"]
                                  [ring/ring-devel "1.4.0"]
                                  [pjstadig/humane-test-output "0.7.0"]

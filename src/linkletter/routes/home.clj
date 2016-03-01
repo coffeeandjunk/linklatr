@@ -10,6 +10,7 @@
             [clojure.java.io :as io]
             [clj-time.core :as time]
             [buddy.sign.jws :as jws]
+            [environ.core :refer [env]]
             [buddy.auth :refer [authenticated? throw-unauthorized]]
             [taoensso.timbre :as log]
             [clojure.walk :refer [keywordize-keys]]
@@ -73,8 +74,14 @@
 (defn login-page
   [request]
   ;(res/redirect "login.html")
+  (log/info (str "from home/login-page, params passed to login-page: " 
+                 {:redirect-url (env :redirect-url)
+                  :scope "public_profile,email"
+                  :client-id (env :fb-app-id)}))
   (if (not  (login/user-logged-in? request))
-    (layout/render "login.html")
+    (layout/render "login.html" {:redirect-url (env :redirect-url)
+                                 :scope "public_profile,email"
+                                 :client-id (env :fb-app-id)})
     (res/redirect "/home")))
 
 

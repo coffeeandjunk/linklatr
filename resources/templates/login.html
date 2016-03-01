@@ -21,27 +21,32 @@
 			<p>Sign in or create an account</p>
 			<button id="fb-login" class="ui primary button" type="submit">Login with Facebook</button>
 		</div>
-
+    
+    <input type="hidden"  value="{{redirect-url}}" id="redirect-url"/>
+    <input type="hidden"  value="{{client-id}}" id="client-id"/>
+    <input type="hidden"  value="{{scope}}" id="scope"/>
 
 <script>
-
-var redirect_url = "https://www.facebook.com/dialog/oauth?"
-  + "client_id=826503424132665"
-  //+ "&redirect_uri=http://localhost:3000/auth"
-  + "&redirect_uri=http://linkletter.co/auth"
-  + "&scope=public_profile,email";
 
 $(document).ready(function(){
 // This is called with the results from from FB.getLoginStatus().
 //window.fbAsyncInit = function() {
  //};
 
+  var redirectUrl = document.getElementById('redirect-url').value,
+      clientId    = document.getElementById('client-id').value,
+      scope       = document.getElementById('scope').value,
+      fbAuthUrl   = "https://www.facebook.com/dialog/oauth?"
+        + "client_id="+ clientId
+        + "&redirect_uri=" + redirectUrl
+        + "&scope=" + scope;
+
   $("#fb-login").focus()  
   .click(function(e){
     e.preventDefault();
     console.log('login button clicked');
 
-		window.location.href = redirect_url;
+		window.location.href = fbAuthUrl;
     //FB.getLoginStatus(handleFbStatus);
   });
 
