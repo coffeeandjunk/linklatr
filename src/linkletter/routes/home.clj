@@ -169,6 +169,16 @@
              json-response))
     (res/redirect "/login")))
 
+(defn search-page
+  "renders the search page"
+  [req]
+  (log/info (str "from home/search-page" ))
+  (if (login/user-logged-in? req)
+    (layout/render "search.html")
+    (res/redirect "/login")))
+
+
+
 (defroutes home-routes
   (GET "/" [request] login-page)
   (GET "/links" [request] get-links)
@@ -181,7 +191,8 @@
   (GET "/ojanalink" [request] obs-link) ;; obscure link
   (GET "/about" [] about-page) ;; obscure link
   (GET "/auth" [] auth)
-  (GET "/search" [request] handle-search)
+  (GET "/search" [request] search-page)
+  (GET "/search/q*" [request] handle-search)
   ;; routes for extension
   ;; TODO group them together
   (POST "/link" [] handle-link)

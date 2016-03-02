@@ -73,5 +73,17 @@ LnkLtr.linkModule = (function(){
       module.addNewLink(module.getLinkTemplate(), obj);
     });
   }
+
+  module.clearList = function(){
+    $('.collection-page').empty();
+  }
+
+  module.displaySearchList = function(result){
+    console.log('From displayList>>> ', result.count);
+    var list = result.result;
+    $.each(list, function(idx, obj){
+      module.addNewLink(module.getLinkTemplate(), obj);
+    });
+  }
 	return module;
 })();

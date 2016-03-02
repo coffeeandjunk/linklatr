@@ -1,7 +1,7 @@
 -- name: search
 -- searches for the given string in the links table
-SELECT lid, title, l_desc, url, image_url
-FROM (SELECT links.id as lid,
+SELECT id, title, l_desc, url, image_url
+FROM (SELECT links.id as id,
         links.title as title,
         links.link_desc as l_desc,
         links.url as url,
