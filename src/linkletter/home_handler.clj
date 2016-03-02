@@ -142,8 +142,12 @@
       (do (log/info "from home_handler/delete-link! when block" link-id) 
           (delete-link-from-db! link-id)))))
 
-;(link-mapped-to-any-user? 77)
-;(delete-link-from-db! 77)
-;(delete-link! 87 14)
+;(db/search {:? [(str "life")]})
 
+(defn search
+  "Searches the title and description for the given string. If the search term consists of more than one word, the words are joined by logical AND"
+  [query-map]
+  (let [result-set (vec (db/search {:? [(str (:q query-map))]}))]
+    {:result result-set :count (count result-set)}))
 
+;(search "life")

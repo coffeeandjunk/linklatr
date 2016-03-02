@@ -53,7 +53,6 @@
       (do (log/debug "from home/home user not logged in")
           (res/redirect "/login"))))
 
-
 (defn home-page
   "redirects to homepage if the user is logged in, else redirects to login page"
   [request]
@@ -159,6 +158,17 @@
      (log/info "profile-data" profile-data)
     (json-response {:success true})))
 
+(defn handle-search
+  "queries the search term, returns the json for the search result and the count"
+  [req]
+  (log/info (str "from home/handle-search" (:query-params req)))
+  (if (login/user-logged-in? req)
+    (do  (-> (:query-params req)
+             keywordize-keys
+             home/search 
+             json-response))
+    (res/redirect "/login")))
+
 (defroutes home-routes
   (GET "/" [request] login-page)
   (GET "/links" [request] get-links)
@@ -171,6 +181,7 @@
   (GET "/ojanalink" [request] obs-link) ;; obscure link
   (GET "/about" [] about-page) ;; obscure link
   (GET "/auth" [] auth)
+  (GET "/search" [request] handle-search)
   ;; routes for extension
   ;; TODO group them together
   (POST "/link" [] handle-link)
