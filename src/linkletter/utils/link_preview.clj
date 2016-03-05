@@ -10,13 +10,14 @@
             [cheshire.core :refer  [generate-string]])
   (:import [org.apache.commons.lang3 StringEscapeUtils]))
 
-(def headers
+(def config-options
   "header for the get request"
   {:headers { :User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0"
              :Accept "text/html,application/x"
              :Connection "keep-alive" } 
    :max-redirects 5
-   :throw-exceptions true })
+   :throw-exceptions true 
+   :insecure? true })
 
 (defn handle-http-exceptions
   "handles clj-http errors"
@@ -38,7 +39,7 @@
   "fetches the webpage and returns enlive nodes"
   [url]
   (sling/try+
-    (html/html-resource (java.io.StringReader. (:body  (client/get url headers))))
+    (html/html-resource (java.io.StringReader. (:body  (client/get url config-options))))
     (catch [:status 404] {:keys [request-time headers body]}
       (handle-http-exceptions request-time headers body "404"))))
 

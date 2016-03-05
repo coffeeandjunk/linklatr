@@ -126,7 +126,7 @@
     (log/info (str "from home_handler/get-links user-id:" user-id " :limit" limit " :offset" offset " :inital-call" initial-call))
     (when (< offset link-count)
       ;(assoc (db/get-links  {:user_id user-id :limit limit :offset offset}) :link-count link-count)
-      {:result-set (vec (db/get-links  {:user_id user-id :limit limit :offset offset})) :link-count 31}))) 
+      {:result-set (vec (db/get-links  {:user_id user-id :limit limit :offset offset})) :link-count link-count}))) 
 
 
 
