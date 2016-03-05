@@ -5,19 +5,24 @@
     LnkLtr = {};
     global.LnkLtr = LnkLtr;
   }
-})(this); 
+})(this);
 
 LnkLtr = {
   init: function(){
     var self = this;
-    self.fetchLinkList(null,self.linkModule.displayList);
+    self.fetchLinkList(null,function(list){
+      self.linkModule.displayList(list);
+      self.bindEvents();
+    });
     self.initPreviewModule();
-    self.bindEvents();
+
     self.linkField = $('#link');
+    self.searchField = $('#search');
     self.linkField.focus();
+    // $('.ui.dropdown').dropdown();
   },
   fetchLinkList: function(params, callback){
-    return (LnkLtr.ajax('/links', null, callback)); 
+    return (LnkLtr.ajax('/links', null, callback));
   },
   initPreviewModule: function(){
     LnkLtr.previewModal =  $("#add-link-dlg").modal({
@@ -31,7 +36,7 @@ LnkLtr = {
         var form = $('#link-form'),
         formData = form.serialize(),
         submitData = LnkLtr.submitNewLink(formData);
-      } 
+      }
     });
     var self = LnkLtr.previewModal;
     self.loader = function(arg){
@@ -46,14 +51,14 @@ LnkLtr = {
     self.loadDataPreviewDialog = function(linkObj){
       self.resetPreviewDialog();
       //TODO add image loader and callback to chack if image is available and laod the correct image
-      self.setImage(linkObj.image_url);
-      self.find('.link-name').val(linkObj.title);
-      self.find('.desc').val(linkObj.desc);
-      self.find('#link').val(linkObj.url);
+      self.setImage(decodeURI(linkObj.image_url));
+      self.find('.link-name').val(decodeURIComponent(linkObj.title));
+      self.find('.desc').val(decodeURIComponent(linkObj.desc));
+      self.find('#link').val(decodeURI(linkObj.url));
       console.log(' load dialog called');
     };
     self.resetImage = function(){
-      self.find('.link-preview-img').css('background-image', 'url("img/no-image.png")');
+      self.find('.link-preview-img').css({'background-color': '#E4E4E4', 'background-image': ''});
       self.find('#image-url').val('');
       self.loader('hide');
     };
@@ -80,10 +85,13 @@ LnkLtr = {
       LnkLtr.linkModule.addPreviewLink(response);
       //LnkLtr.link = response;
     }else{
-      Lnkltr.handleError(response.error);  
+      Lnkltr.handleError(response.error);
     }
   },
   bindEvents: function(){
+    // init the dropdowns
+    $('.ui.dropdown').dropdown();
+
     var linkElm = document.getElementById('link');
     var self = this;
     //show linkpreview dialog on pressing enter ker
@@ -93,19 +101,20 @@ LnkLtr = {
         if(linkElm.value && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.value))){
           //make a ajax call and get url details
           var url= '/link/details',
-          data = { url: linkElm.value }; 
+          data = { url: linkElm.value };
           LnkLtr.previewModal.modal('show');
+          LnkLtr.previewModal.loader('show');
           LnkLtr.ajax(url, data, self.handleGetLink);
         }
       }
     };
     //bind logout button action
-    $('.logout-button').click(function(e){
-      window.location.href = "/logout"
-    });
+    // $('.logout-button').click(function(e){
+    //   window.location.href = "/logout"
+    // });
 
       //bind delete action
-    $('.collection-page').on('click','.link-container .link-footer a:first-child',function(e){ LnkLtr.deleteLink(e); })
+    $('.collection-page').on('click','.link-item a.delete',function(e){ LnkLtr.deleteLink(e); })
   },
   submitNewLink: function(formData){
     $.ajax({
@@ -155,7 +164,7 @@ $(document).ready(function(){
   LnkLtr.init();
 
   function isUrlPresent(obj){
-    return obj.url; 
+    return obj.url;
   }
 
   // TODO remove this code
