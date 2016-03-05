@@ -2,10 +2,6 @@
 LnkLtr.linkModule = (function(){
 
 	var module = {};
-  var rowContainer = $('.links-container-wrapper');
-	var rowTmpl = $('#row-template');
-  var linksContainer = $('.links-container');
-
 
 	module.getLastRow = function(linksContainer){
 		return linksContainer.last();
@@ -20,11 +16,6 @@ LnkLtr.linkModule = (function(){
 	}
 
 	// TODO implement singleton pattern
-	module.getNewRow = function(rowTmpl){
-		return module.compileTemplate(rowTmpl)();
-	}
-
-	// TODO implement singleton pattern
 	module.getNewLink = function(linkTmpl, context){
 		var tmpl = module.compileTemplate(linkTmpl);
 		return tmpl(context);
@@ -34,17 +25,14 @@ LnkLtr.linkModule = (function(){
 		return row.find('.link-item');
 	}
 
-	module.addNewRow = function(link){
-		rowContainer.append(module.addToRow(module.getNewRow(rowTmpl), link));
-	}
   module.resetForm = function(){
      $("#link-form").trigger('reset');
      module.resetImage();
   }
-  
+
 	module.addNewLink = function(compiledTempl, linkObj){
-		var linksContainer = $('.collection-page.grid');
-    var link = compiledTempl(linkObj) 
+		var linksContainer = $('.collection-page.container');
+    var link = compiledTempl(linkObj)
 			module.addToRow(linksContainer, link);
 	}
   module.resetImage = function(elm){

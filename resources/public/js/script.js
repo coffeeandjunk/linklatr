@@ -5,7 +5,7 @@
     LnkLtr = {};
     global.LnkLtr = LnkLtr;
   }
-})(this); 
+})(this);
 
 LnkLtr = {
   init: function(){
@@ -13,11 +13,13 @@ LnkLtr = {
     self.limit = 8;
     self.offset = 0;
     //self.totalLinks = getTotalLinks();
+		self.bindEvents();
     self.fetchLinkList({offset: self.offset, limit: self.limit, "initial-call": true}, self.handleLinklist);
-    self.initPreviewModule();
-    self.bindEvents();
+    self.initPreviewModule(); 
     self.linkField = $('#link');
+    self.searchField = $('#search');
     self.linkField.focus();
+    // $('.ui.dropdown').dropdown();
   },
   fetchLinkList: function(params, callback){
     var self = LnkLtr;
@@ -46,7 +48,7 @@ LnkLtr = {
         var form = $('#link-form'),
         formData = form.serialize(),
         submitData = LnkLtr.submitNewLink(formData);
-      } 
+      }
     });
     var self = LnkLtr.previewModal;
     self.loader = function(arg){
@@ -68,7 +70,7 @@ LnkLtr = {
       console.log(' load dialog called');
     };
     self.resetImage = function(){
-      self.find('.link-preview-img').css('background-image', 'url("img/no-image.png")');
+      self.find('.link-preview-img').css({'background-color': '#E4E4E4', 'background-image': ''});
       self.find('#image-url').val('');
       self.loader('hide');
     };
@@ -93,47 +95,59 @@ LnkLtr = {
     //TODO check of there is no error in the response
     if(!response.error){
       LnkLtr.linkModule.addPreviewLink(response);
-      //LnkLtr.link = response;
     }else{
-      Lnkltr.handleError(response.error);  
+      Lnkltr.handleError(response.error);
     }
   },
+	showLinkPreviewModal: function(linkElm){
+		//var linkElm = document.getElementById('link');
+		var self= this;
+		if(linkElm.value && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.value))){
+			//make a ajax call and get url details
+			var url= '/link/details',
+			data = { url: linkElm.value };
+			LnkLtr.previewModal.modal('show');
+			LnkLtr.previewModal.loader('show');
+			LnkLtr.ajax(url, data, self.handleGetLink);
+		}
+	},
   bindEvents: function(){
+    // init the dropdowns
+    $('.ui.dropdown').dropdown();
+
     var linkElm = document.getElementById('link');
     var self = this;
     //show linkpreview dialog on pressing enter ker
     linkElm.onkeypress = function(e){
       var code = (e.keyCode ? e.keyCode : e.which);
       if(code == 13) { //Enter keycode
-        if(linkElm.value && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.value))){
-          //make a ajax call and get url details
-          var url= '/link/details',
-          data = { url: linkElm.value }; 
-          LnkLtr.previewModal.modal('show');
-          LnkLtr.ajax(url, data, self.handleGetLink);
-        }
+				self.showLinkPreviewModal(linkElm);
       }
     };
+		$('.menu .bookmark.link').click(function(e){
+			self.showLinkPreviewModal(linkElm);
+		});
     //bind logout button action
-    $('.logout-button').click(function(e){
-      window.location.href = "/logout"
-    });
+    // $('.logout-button').click(function(e){
+    //   window.location.href = "/logout"
+    // });
 
       //bind delete action
     $('.collection-page').on('click','.link-container .link-footer a:first-child',function(e){ LnkLtr.deleteLink(e); })
 
-    $(window).on('scroll', function(){
-      if( $(window).scrollTop() == $(document).height() - $(window).height() ) {
+    $('.more.button').on('click', function(e){
+      //if( $(window).scrollTop() == $(document).height() - $(window).height() ) {
         console.log('scroll is called');
-        //self.fetchLinkList();
         console.log(" Offset: ", self.offset," LIMIT: ", self.limit, "Link Count: ", self.linkCount);
         if(self.offset < self.linkCount){ 
           self.fetchLinkList({offset: self.offset, limit: self.limit},function(res){
             self.linkModule.displayList(res['result-set'])
           });
           self.offset += self.limit;
-        }
-      }
+        }else{
+					//TODO hide the more button if all the links are loaded
+				}
+      //}
     });
   },
   submitNewLink: function(formData){
@@ -184,7 +198,7 @@ $(document).ready(function(){
   LnkLtr.init();
 
   function isUrlPresent(obj){
-    return obj.url; 
+    return obj.url;
   }
 
   // TODO remove this code
