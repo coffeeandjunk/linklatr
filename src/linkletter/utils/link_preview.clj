@@ -98,13 +98,13 @@
 (defn get-image-url
   "Gets the url for fb meta tag image or the first image of the page"
   [page url]
-  (or (get-meta-tag-content (get-item-by-property page "og:image"))
+  (form-valid-url 
+    (or (get-meta-tag-content (get-item-by-property page "og:image"))
       (-> (get-elements-by-tag page "img")
           first
           :attrs
-          :src
-          (form-valid-url url))))
-
+          :src))
+    url))
 
 (defn get-desc-from-meta [page]
   (get-meta-tag-content (get-item-by-property (get-elements-by-tag page "meta")
@@ -148,5 +148,4 @@
      :image_url (escape-html (get-image-url page url))
      :desc (escape-html (get-desc page)) 
      :url (escape-html (or (get-url-from-meta page) url))}))
-
 
