@@ -104,15 +104,30 @@
   (preview/get-link-details url))
 
 
-; get all links from database
+(defn get-user-link-count
+  "fetches the total number of links for the currrent user"
+  [user-id]
+  (-> (db/get-user-link-count {:user_id user-id})
+      first
+      :count))
+
+
 ; TODO change the function after modifiying the schema
 ; TODO modify the function to accept user-id instead of req map
 (defn get-links 
-  "gets all links for the current user"
+  "Fetches  links for the current user"
   [req]
-  (let [ user-id (get-user-id req)]
-  (log/info "from home_handler/get-links user-id: " user-id)
-  (db/get-links  {:user_id user-id})))
+  (let [user-id (get-user-id req)
+        limit (Integer/parseInt (get-in req [:params :limit])) 
+        offset (Integer/parseInt (get-in req [:params :offset]))
+        initial-call (boolean (get-in req [:params :initial-call]))
+        link-count (get-in req [:session :user-links-count])]
+    (log/info (str "from home_handler/get-links user-id:" user-id " :limit" limit " :offset" offset " :inital-call" initial-call))
+    (when (< offset link-count)
+      ;(assoc (db/get-links  {:user_id user-id :limit limit :offset offset}) :link-count link-count)
+      {:result-set (vec (db/get-links  {:user_id user-id :limit limit :offset offset})) :link-count 31}))) 
+
+
 
 (defn delete-link-from-db!
   "deletes a link from the db permanently"

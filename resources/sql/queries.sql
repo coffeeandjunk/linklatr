@@ -27,11 +27,18 @@ INSERT INTO links
 (url, title, image_url, link_desc)
 VALUES (:url, :title, :image_url, :desc)
 
+-- name: get-user-link-count
+-- get count of all the links from db for the given user-id
+SELECT  count(*) 
+FROM l2u WHERE l2u.uid = :user_id
+
+
 -- name: get-links
 -- get all links from db for the given id
 SELECT  links.id, links.url, links.title, links.link_desc, links.image_url, l2u.uid 
 FROM links INNER JOIN l2u ON 
 l2u.lid = links.id AND l2u.uid = :user_id
+LIMIT :limit OFFSET :offset
 
 --name: get-link-details
 -- fetches all details for a given link-id

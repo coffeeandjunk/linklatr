@@ -10,14 +10,29 @@
 LnkLtr = {
   init: function(){
     var self = this;
-    self.fetchLinkList(null,self.linkModule.displayList);
+    self.limit = 8;
+    self.offset = 0;
+    //self.totalLinks = getTotalLinks();
+    self.fetchLinkList({offset: self.offset, limit: self.limit, "initial-call": true}, self.handleLinklist);
     self.initPreviewModule();
     self.bindEvents();
     self.linkField = $('#link');
     self.linkField.focus();
   },
   fetchLinkList: function(params, callback){
-    return (LnkLtr.ajax('/links', null, callback)); 
+    var self = LnkLtr;
+    var linkLimit = params || {offset: self.offset, limit: self.limit};
+    console.log(" linklimit: ", linkLimit, " params: ", params);
+    return (LnkLtr.ajax('/links', linkLimit, callback)); 
+  },
+  handleLinklist: function(response){
+    var self = LnkLtr;
+    self.linkCount = response['link-count'];
+    var resultSet = response['result-set'];
+    self.offset += self.limit;
+    if(resultSet){
+      self.linkModule.displayList(resultSet);
+    }
   },
   initPreviewModule: function(){
     LnkLtr.previewModal =  $("#add-link-dlg").modal({
@@ -106,6 +121,20 @@ LnkLtr = {
 
       //bind delete action
     $('.collection-page').on('click','.link-container .link-footer a:first-child',function(e){ LnkLtr.deleteLink(e); })
+
+    $(window).on('scroll', function(){
+      if( $(window).scrollTop() == $(document).height() - $(window).height() ) {
+        console.log('scroll is called');
+        //self.fetchLinkList();
+        console.log(" Offset: ", self.offset," LIMIT: ", self.limit, "Link Count: ", self.linkCount);
+        if(self.offset < self.linkCount){ 
+          self.fetchLinkList({offset: self.offset, limit: self.limit},function(res){
+            self.linkModule.displayList(res['result-set'])
+          });
+          self.offset += self.limit;
+        }
+      }
+    });
   },
   submitNewLink: function(formData){
     $.ajax({

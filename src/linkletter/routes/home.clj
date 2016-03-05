@@ -14,6 +14,7 @@
             [buddy.auth :refer [authenticated? throw-unauthorized]]
             [taoensso.timbre :as log]
             [clojure.walk :refer [keywordize-keys]]
+            [ring.middleware.session :as ring-session]
             [buddy.auth.backends.token :refer [jws-backend]]
             [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]))
 
@@ -37,28 +38,40 @@
       (json-response {:data op} 400)))) 
 
 
+(defn set-session-value
+  "sets the map in session"
+  [map-key map-value request response]
+  (assoc response 
+         :session (assoc (:session request) map-key map-value)))
+
 
 (defn get-links [req]
-  (json-response (home/get-links req)))
+  ;(set-viewed-links-count-in-session req)
+   (json-response (home/get-links req)))
 
 (defn home
   [request]
-  ;(if-not (authenticated? request)
-    ;(throw-unauthorized)
-    ;(okay {:status "Logged" :message (str "hello logged user "
-    (log/debug "from home/home user-logged-in? " (login/user-logged-in? request))
+    (log/debug "from home/home :session " (:session request))
     (if (login/user-logged-in? request)
       (do (log/debug "from home/home user logged in") 
-          (layout/render "home.html"))
+          (set-session-value
+            :user-links-count (home/get-user-link-count (home/get-user-id  request))
+            request  
+            (layout/render "home.html")
+            ;(res/redirect home)
+            ))
       (do (log/debug "from home/home user not logged in")
           (res/redirect "/login"))))
 
 (defn home-page
   "redirects to homepage if the user is logged in, else redirects to login page"
   [request]
-  (log/info "from home/home-page request" request)
+  (log/debug "from home/home-page link-count" (home/get-user-link-count (home/get-user-id  request)))
   (if (login/user-logged-in? request)
-    (res/redirect home)))
+    (set-session-value
+      :user-links-count (home/get-user-link-count (home/get-user-id  request))
+      request  
+      (res/redirect home))))
 
 (defn obs-link
   "Obscure link"
