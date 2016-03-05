@@ -7,7 +7,8 @@
             [clj-http.client :as client]
             [slingshot.slingshot :as sling :only [throw+ try+]]
             [taoensso.timbre :as log]
-            [cheshire.core :refer  [generate-string]]))
+            [cheshire.core :refer  [generate-string]])
+  (:import [org.apache.commons.lang3 StringEscapeUtils]))
 
 (def headers
   "header for the get request"
@@ -16,29 +17,30 @@
              :Connection "keep-alive" } 
    :max-redirects 5
    :throw-exceptions true })
-(def url "http://www.99points.info/2010/07/facebook-like-extracting-url-data-with-jquery-ajax-php/")
-(def url2 "https://medium.com/life-learning/how-to-miss-the-point-of-starting-a-business-19faaabf7fc8#.99o8jujp")
 
 (defn handle-http-exceptions
   "handles clj-http errors"
   [request-time headers body & msg]
-  (log/warn )
+  (log/warn (str "http exception. Error: " headers))
   msg)
+
+;(getHost (.getHost java.net.URL. "http://www.example.com/docs/resource1.html"))
+
+
+(defn get-meta-tag-content
+  [tag-content]
+  (-> tag-content
+      first
+      :attrs
+      :content))
 
 (defn fetch-url 
   "fetches the webpage and returns enlive nodes"
   [url]
-  ;(html/html-resource (java.io.StringReader. (slurp  "http://www.99points.info/2010/07/facebook-like-extracting-url-data-with-jquery-ajax-php")))
-  ;(html/html-resource (java.io.StringReader  (client/get url headers)))
   (sling/try+
     (html/html-resource (java.io.StringReader. (:body  (client/get url headers))))
     (catch [:status 404] {:keys [request-time headers body]}
-      (handle-http-exceptions request-time headers body "404")))
-  ;(spit (slurp "http://aeon.co/magazine/science/the-universal-constants-that-drive-physicists-mad/")
-  ;(html/html-resource (java.io.StringReader. (slurp "test.html"))) 
-  )
-
-;(html/html-resource (java.io.StringReader. (fetch-url)))
+      (handle-http-exceptions request-time headers body "404"))))
 
 
 (defn get-elements-by-tag [page tag] 
@@ -55,49 +57,95 @@
 (defn get-title 
   "Gets the page title, from fb meta tag or title tag"
   [page]
-  (let [fb-titile  (:content (:attrs (first (get-item-by-property page "og:title"))))]
+  (let [fb-titile  (get-meta-tag-content (get-item-by-property page "og:title"))]
     (if-not (nil? fb-titile)
       fb-titile
       (first (:content (first (get-elements-by-tag page "title")))))))
 
+(defn get-host-url
+  "returns the host url of the provied url"
+  [url]
+  (.getHost (java.net.URL. url)))
+
+(defn url-or-nil
+  "return a java.net.URL instance or nil if failed to instantiate"
+  [url]
+  (try
+    (java.net.URL. url)
+    (catch java.net.MalformedURLException e nil)))
+
+(defn remove-starting-slash
+  "removes the starting slash form the string"
+  [path]
+  (if (.startsWith (.toString path) "/")
+    (subs path 1)
+    path))
+
+(defn form-valid-url 
+  "returns a valid url if the string is a relative path, by appending the host and protocol from the url"
+  [path url]
+  (if-not (url-or-nil path)
+    (do (let [url-instance (java.net.URL. url)
+              rel-path (remove-starting-slash path)]
+          (str (.getProtocol url-instance) 
+               "://"
+               (.getHost url-instance)
+               "/"
+               rel-path)))
+    path))
+
 (defn get-image-url
   "Gets the url for fb meta tag image or the first image of the page"
-  [page]
-  (let [fb-img (:content (:attrs (first (get-item-by-property page "og:image"))))]
-  (if-not (nil? fb-img)
-    fb-img
-    (:src  (:attrs  (first 
-                      (get-elements-by-tag page
-                                           "img")))))))
+  [page url]
+  (or (get-meta-tag-content (get-item-by-property page "og:image"))
+      (-> (get-elements-by-tag page "img")
+          first
+          :attrs
+          :src
+          (form-valid-url url))))
+
+
 (defn get-desc-from-meta [page]
-  (:content (:attrs (first (get-item-by-property (get-elements-by-tag page "meta")
+  (get-meta-tag-content (get-item-by-property (get-elements-by-tag page "meta")
                                                  "description"
-                                                 "name")))))
-(defn get-desc-from-body
-  "gets page description from the tags in the body, only 80 characters"
+                                                 "name")))
+(defn get-url-from-meta
+  "gets the url from og:url meta tag"
   [page]
-  (cstring/join " " 
-                (take 80 (cstring/split (cstring/trim
-                                          (cstring/replace  (cstring/join ""
-                                                                          (html/select page 
-                                                                                       [:body html/text-node]))
-                                                           #"\n|\n\r|\t"
-                                                           " "))
-                                        #" "))))
+  (get-meta-tag-content (get-item-by-property page "og:url")))
+
+(defn get-desc-from-body
+  "gets page description from the text nodes in the body, only 200 characters"
+  [page]
+(->> 
+  (-> (cstring/join "" (html/select page [:body html/text-node]))
+      (cstring/replace #"\n|\n\r|\t" " ")
+      cstring/trim
+      (cstring/split #" "))
+  (take 200)
+  (filter #(not ( = "" %)))
+  (cstring/join " ")))
+
+(defn escape-html
+  "Escapes the characters in a String using HTML entities"
+  [str-content]
+  (org.apache.commons.lang3.StringEscapeUtils/escapeHtml4 str-content))
+
 (defn get-desc
   "Gets page description"
   [page]
-  (let [fb-desc (:content (:attrs (first (get-item-by-property page "og:description"))))]
+  (let [fb-desc (get-meta-tag-content (get-item-by-property page "og:description"))]
     (cond (not (nil? fb-desc)) fb-desc
-          (not (nil? (get-desc-from-meta page)))(get-desc-from-meta page) 
+          (not (nil? (get-desc-from-meta page))) (get-desc-from-meta page) 
           :else (get-desc-from-body page))))
 
 (defn get-link-details
   "returns a map with url, title, image-url and link description"
   [url]
   (let [page (fetch-url url)]
-    {:title (get-title page)
-     :image_url (get-image-url page)
-     :desc (get-desc page) 
-     :url url }))
+    {:title (escape-html (get-title page))
+     :image_url (escape-html (get-image-url page url))
+     :desc (escape-html (get-desc page)) 
+     :url (escape-html (or (get-url-from-meta page) url))}))
+
 

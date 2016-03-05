@@ -2,6 +2,7 @@
   (:require [linkletter.db.core :as db]
             [ring.util.codec :as codec]
             [taoensso.timbre :as log]
+            ;[linkletter.utils.link-preview :refer [escape-html]]
             [linkletter.utils.link-preview :as preview]
             [cheshire.core :refer  [generate-string]]))
 
@@ -26,9 +27,9 @@
 (defn clean-form-data [form-data]
   {:url (escape-string (get form-data :link))
    ;:user_id (get-user-id)
-   :title (escape-string (get form-data :link-name))
-   :desc (escape-string (get form-data :desc))
-   :image_url (escape-string (get form-data :image-url))})
+   :title (preview/escape-html (get form-data :link-name))
+   :desc (preview/escape-html (get form-data :desc))
+   :image_url (preview/escape-html (get form-data :image-url))})
 
 (def sample-form-data
   {:url "https%3A%2F%2Fgithub.com%2Fring-clojure%2Fring-codec"

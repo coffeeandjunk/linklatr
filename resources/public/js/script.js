@@ -62,8 +62,8 @@ LnkLtr = {
       self.resetPreviewDialog();
       //TODO add image loader and callback to chack if image is available and laod the correct image
       self.setImage(linkObj.image_url);
-      self.find('.link-name').val(linkObj.title);
-      self.find('.desc').val(linkObj.desc);
+      self.find('.link-name').val(LnkLtr.utils.unescapeHtml(linkObj.title));
+      self.find('.desc').val(LnkLtr.utils.unescapeHtml(linkObj.desc));
       self.find('#link').val(linkObj.url);
       console.log(' load dialog called');
     };

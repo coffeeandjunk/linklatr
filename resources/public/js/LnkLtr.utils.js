@@ -35,6 +35,14 @@
     console.log("Error:  " , errorMsg);
   };
 
+  LnkLtr.utils.escapeHtml = function(str){
+    return he.escape(str);
+  };
+
+  LnkLtr.utils.unescapeHtml = function(str){
+    return he.unescape(str);
+  };
+
   LnkLtr.utils.getTemplate = function(name) {
     if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {
       $.ajax({
