@@ -40,7 +40,6 @@ LnkLtr = {
   initPreviewModule: function(){
     LnkLtr.previewModal =  $("#add-link-dlg").modal({
       onHide: function(){
-        console.log('hidden');
         LnkLtr.previewModal.resetPreviewDialog();
       },
       onApprove: function() {
@@ -61,6 +60,12 @@ LnkLtr = {
         console.log('Invalid arg for LnkLtr.previewModal.loader() funciton');
       }
     };
+		self.enableCollect = function(){
+			$(self).find(".approve.button").removeClass('disabled');
+		};
+		self.disableCollect = function(){
+			$(self).find(".approve.button").addClass('disabled');
+		};
     self.loadDataPreviewDialog = function(linkObj){
       self.resetPreviewDialog();
       //TODO add image loader and callback to chack if image is available and laod the correct image
@@ -95,6 +100,7 @@ LnkLtr = {
     console.log('from handleGetLink::::   ', response);
     //TODO check of there is no error in the response
     if(!response.error){
+			LnkLtr.previewModal.enableCollect();
       LnkLtr.linkModule.addPreviewLink(response);
     }else{
       Lnkltr.handleError(response.error);
@@ -107,6 +113,7 @@ LnkLtr = {
 			//make a ajax call and get url details
 			var url= '/link/details',
 			data = { url: linkElm.value };
+			LnkLtr.previewModal.disableCollect();
 			LnkLtr.previewModal.modal('show');
 			LnkLtr.previewModal.loader('show');
 			LnkLtr.ajax(url, data, self.handleGetLink);
