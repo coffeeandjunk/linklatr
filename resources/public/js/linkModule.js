@@ -57,6 +57,10 @@ LnkLtr.linkModule = (function(){
     return LnkLtr.utils.getTemplate('links_templ'); //fetches the link template and compiles it
   }
 
+  module.getSearchTemplate = function(){
+    return LnkLtr.utils.getTemplate('search_links_templ'); //fetches the link template and compiles it
+  }
+
   //TODO improve the funciton, instead of re-initializing the whole container -
   // initialize only the item added
   module.initLinkTemplate = function(elm){
@@ -79,7 +83,7 @@ LnkLtr.linkModule = (function(){
     console.log('From displayList>>> ', result.count);
     var list = result.result;
     $.each(list, function(idx, obj){
-      module.addNewLink(module.getLinkTemplate(), obj, $('#search-container .container.collection-page'));
+      module.addNewLink(module.getSearchTemplate(), obj, $('#search-container .container.collection-page'));
     });
   }
 	return module;

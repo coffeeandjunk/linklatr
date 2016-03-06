@@ -1,0 +1,16 @@
+<div class="column">
+  <div class="image content link-item" data-link-id={{id}}>
+    <a href="{{url}}" target="_blank">
+      <div class="ui image link-image-wrapper" style="background:url({{image_url}}), rgba(0, 0, 0, 0.4); background-size: cover;">
+      </div>
+    </a>
+    <div class="description link-content">
+      <div class="link-header" display="relative">
+        <div class="link-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+      </div>
+      <div class="link-url">{{url}}</div>
+      <!-- <div class="link-desc"><span style="font-weight: 700;">{{unescapeHtml title}}: </span>{{link_desc}}</div> -->
+      <div class="link-desc">{{unescapeHtml link_desc}}</div>
+    </div>
+  </div>
+</div>
