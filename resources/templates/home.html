@@ -68,13 +68,13 @@
 
 
   <!-- Landing page when user hasnot collected any links content -->
-  <div class="ui center aligned empty container" style="display:none">
+  <div id="empty-link-container" class="ui center aligned empty container hide">
     <img class="ui fluid large centered image" style="margin:80px auto 20px;" src="img/lovelyday.gif" />
     <h1 style="font-weight: 400; ;margin-bottom: 30px;">What a lovely day... to save some links ;)</h1>
     <!-- <div style="color: #808080">Paste a new URL below or just save this one to get started :)</div> -->
     <div class="ui input" style="margin-top: 10px;">
-      <input type="url" placeholder="http://..." value="http://121clicks.com/inspirations/miniature-car-scenes-by-photographer-ashraful-arefin" style="width: 600px; height: 46px;" />
-      <button class="ui collect large button" style="width: 120px; margin-left: 10px; height: 46px;">Save</button>
+      <input type="url" id="your-first-link" placeholder="http://..." value="" style="width: 600px; height: 46px;" />
+      <button class="ui collect large button" id="first-link-add-btn" style="width: 120px; margin-left: 10px; height: 46px;">Save</button>
     </div>
   </div>
 
@@ -135,7 +135,7 @@
       </div>
     </div>
 
-</div>
+	</div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

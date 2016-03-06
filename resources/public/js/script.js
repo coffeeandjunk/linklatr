@@ -28,15 +28,21 @@ LnkLtr = {
     console.log(" linklimit: ", linkLimit, " params: ", params);
     return (LnkLtr.ajax('/links', linkLimit, callback)); 
   },
-  handleLinklist: function(response){
-    var self = LnkLtr;
-    self.linkCount = response['link-count'];
-    var resultSet = response['result-set'];
-    self.offset += self.limit;
-    if(resultSet){
-      self.linkModule.displayList(resultSet);
-    }
-  },
+	handleLinklist: function(response){
+		var self = LnkLtr;
+		if(response){
+			self.linkCount = response['link-count'] || 0;
+			var resultSet = response['result-set'] || null;
+			self.offset += self.limit;
+			if(resultSet){
+				self.linkModule.displayList(resultSet);
+			}		
+		}else{
+			$("#links-container").addClass('hide');
+			$("#empty-link-container").removeClass('hide');
+		}
+
+	},
   initPreviewModule: function(){
     LnkLtr.previewModal =  $("#add-link-dlg").modal({
       onHide: function(){
@@ -109,10 +115,10 @@ LnkLtr = {
 	showLinkPreviewModal: function(linkElm){
 		//var linkElm = document.getElementById('link');
 		var self= this;
-		if(linkElm.value && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.value))){
+		if(linkElm.val() && LnkLtr.utils.isUrlValid(LnkLtr.utils.sanitizeUrl(linkElm.val()))){
 			//make a ajax call and get url details
 			var url= '/link/details',
-			data = { url: linkElm.value };
+			data = { url: linkElm.val() };
 			LnkLtr.previewModal.disableCollect();
 			LnkLtr.previewModal.modal('show');
 			LnkLtr.previewModal.loader('show');
@@ -128,17 +134,27 @@ LnkLtr = {
 			LnkLtr.linkModule.initLinkTemplate(e.target);
 		});
 
-    var linkElm = document.getElementById('link');
+    var linkElm =document.getElementById('link'),
+				firstLink =document.getElementById('your-first-link');
     var self = this;
-    //show linkpreview dialog on pressing enter ker
+		    //show linkpreview dialog on pressing enter ker
     linkElm.onkeypress = function(e){
       var code = (e.keyCode ? e.keyCode : e.which);
       if(code == 13) { //Enter keycode
-				self.showLinkPreviewModal(linkElm);
+				self.showLinkPreviewModal($(linkElm));
+      }
+    };
+    firstLink.onkeypress = function(e){
+      var code = (e.keyCode ? e.keyCode : e.which);
+      if(code == 13) { //Enter keycode
+				self.showLinkPreviewModal($(firstLink));
       }
     };
 		// show the linkpreview dialog on clicking the button in link inputbox
-		$('.menu .link').click(function(e){
+		$('.menu .link, #first-link-add-btn').click(function(e){
+			linkElm = $(e.target).siblings('input');
+			console.log("element:::: ",linkElm)
+
 			self.showLinkPreviewModal(linkElm);
 		});
 		
@@ -215,7 +231,11 @@ LnkLtr = {
 	showCollection: function(){
 		$('#links-container').removeClass('hide');
 	},
+	hideFirstLinkPage: function(){
+		$('#empty-link-container').addClass('hide');
+	},
 	switchToSearch: function(){
+		this.hideFirstLinkPage();
 		this.clearSearchContainer();
 		this.showSearch();
 		this.hideCollection();
