@@ -27,7 +27,7 @@
   <div class="fluid ui container" id="main">
     <div class="nav-bar">
       <div class="ui menu secondary container">
-        <img class="logo" src="img/linkletter_small.svg" alt="Linkletter"/>
+        <a href="/"><img class="logo" src="img/linkletter_small.svg" alt="Linkletter"/></a>
         <div class="ui search">
           <div class="ui left icon fluid input">
             <input id="search" type="text" placeholder="Search">
@@ -47,14 +47,15 @@
         <div class="ui right top pointing dropdown item">
           <i class="sidebar icon" style="margin: 0; color: #666;"></i>
           <div class="menu">
+            <div class="header" style="text-transform: none; color: #999;">Hello {{user_first_name}}</div>
             <a class="item" href="/about">About Linkleter</a>
-            <div class="ui divider"></div>
             <a class="item" href="/logout">Logout</a>
           </div>
         </div>
       </div>
     </div>
   </div>
+
 
 	<div class="ui notification message">
 		<!-- <i class="close icon"></i> -->
@@ -63,31 +64,29 @@
 		</div>
 	</div>
 
-  <!-- Landing page when user has not collected any links content -->
-  <div id="empty-list-sec" class="no-link-page" style="display: none;">
-    <div class="no-link-logo-image">
-      <img class="ui  image" src="img/linkletter_big.png" alt="no-image" />
-    </div>
-    <div class="intro"><span class="ll-color">Linkletter</span> is a place to <span style="color: #686A6D">Collect</span> links from everywhere.</div>
 
-    <div class="link-label-container">
-      <label class="url-label">Paste a URL here or just press enter:</label>
-      <div class="ui input">
-        <input placeholder="http://example.com" type="text">
-      </div>
+
+
+  <!-- Landing page when user hasnot collected any links content -->
+  <div class="ui center aligned empty container" style="display:none">
+    <img class="ui fluid large centered image" style="margin:80px auto 20px;" src="img/lovelyday.gif" />
+    <h1 style="font-weight: 400; ;margin-bottom: 30px;">What a lovely day... to save some links ;)</h1>
+    <!-- <div style="color: #808080">Paste a new URL below or just save this one to get started :)</div> -->
+    <div class="ui input" style="margin-top: 10px;">
+      <input type="url" placeholder="http://..." value="http://121clicks.com/inspirations/miniature-car-scenes-by-photographer-ashraful-arefin" style="width: 600px; height: 46px;" />
+      <button class="ui collect large button" style="width: 120px; margin-left: 10px; height: 46px;">Save</button>
     </div>
   </div>
 
 
 
-
 	<!-- user feed container -->
 	<div id="links-container">
-		
+
 		<!-- contains the user links -->
 		<div class="ui container collection-page">
 
-		</div> 
+		</div>
 		<div class="ui centered grid container">
 			<button class="ui circular icon massive more button" style="">
 				<i class="chevron down icon"></i>
@@ -101,7 +100,7 @@
 			<div class="ui divider" style="margin-top:10px; max-width: 850px;"></div>
 		</div>
 		<div class="ui container collection-page">
-		
+
 		</div>
 		<div class="ui centered grid container">
 			<button class="ui circular icon massive more button" style="">
@@ -110,6 +109,8 @@
 		</div>
 
 	</div>
+
+
 
   <!-- Link saving dialog -->
   <div class="ui modal"id="add-link-dlg">
@@ -127,13 +128,23 @@
           </div>
           <input type="hidden" class="" id="link" name="link" />
           <input type="hidden" class="" id="image-url" name="image-url" />
-    <div class="actions" style="">
-      <button id="#collect-button"class="ui collect large button approve disabled" style="width: 150px;">Collect</button>
-    </div>
+          <div class="actions" style="">
+            <button id="collect-button"class="ui collect large button approve disabled" style="width: 150px;">Collect</button>
+          </div>
         </form>
       </div>
     </div>
-  </div>
+
 </div>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-74756352-1', 'auto');
+ga('send', 'pageview');
+
+</script>
 </body>
 </html>

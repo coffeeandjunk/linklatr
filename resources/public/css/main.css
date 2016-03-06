@@ -37,7 +37,6 @@ body {
 
 .more.button {
   /*background: linear-gradient(#3EAFAF,#359393);*/
-  /*display: none;*/
   color: #FFF;
   margin: 60px 0;
   /*box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);*/
@@ -221,34 +220,6 @@ transition: background,.3s;
 /*  LIST OF LINKS ENDS */
 
 /*  NO LINK PAGE STARTS */
-
-.no-link-page{
-  max-width: 600px !important;
-  margin: 6% auto 0px auto;
-  text-align: center;
-  color: #8a8a8a;
-}
-.no-link-page .intro{
-  font-size: 20px;
-}
-.no-link-page .no-link-logo-image .image{
-  margin: 0px auto 10px auto;
-}
-
-.no-link-page .link-label-container{
-  margin-top: 12px;
-}
-.no-link-page .link-label-container label{
-  margin-bottom: 10px;
-  display: block;
-}
-.no-link-page .input.ui{
-  display: flex;
-}
-
-.ll-color{
-  color: #3EAFAF;
-}
 
 /*  ADD LINK PAGE STARTS */
 
