@@ -12,21 +12,21 @@
     <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="css/fonts.css">
     <style>
-      #fb-login {
-        width: 240px;
-        height: 48px;
-        font-size: 16px;
-        font-weight: 400;
-        color: #FFF;
-        background: linear-gradient(#476CB9, #3B5998);
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
-      }
-      #fb-login:hover {
-        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.5);
-        -webkit-transition: background,0.15s;
-        -moz-transition: background,0.15s;
-        transition: background,0.15s;
-      }
+    #fb-login {
+      width: 240px;
+      height: 48px;
+      font-size: 16px;
+      font-weight: 400;
+      color: #FFF;
+      background: linear-gradient(#476CB9, #3B5998);
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
+    }
+    #fb-login:hover {
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,0.5);
+      -webkit-transition: background,0.15s;
+      -moz-transition: background,0.15s;
+      transition: background,0.15s;
+    }
     </style>
   </head>
   <body>
@@ -44,36 +44,46 @@
     </button>
   </div>
 
-<input type="hidden"  value="{{redirect-url}}" id="redirect-url"/>
-<input type="hidden"  value="{{client-id}}" id="client-id"/>
-<input type="hidden"  value="{{scope}}" id="scope"/>
+  <input type="hidden"  value="{{redirect-url}}" id="redirect-url"/>
+  <input type="hidden"  value="{{client-id}}" id="client-id"/>
+  <input type="hidden"  value="{{scope}}" id="scope"/>
 
-<script>
+  <script>
 
-$(document).ready(function(){
-  // This is called with the results from from FB.getLoginStatus().
-  //window.fbAsyncInit = function() {
-  //};
+  $(document).ready(function(){
+    // This is called with the results from from FB.getLoginStatus().
+    //window.fbAsyncInit = function() {
+    //};
 
-  var redirectUrl = document.getElementById('redirect-url').value,
-  clientId    = document.getElementById('client-id').value,
-  scope       = document.getElementById('scope').value,
-  fbAuthUrl   = "https://www.facebook.com/dialog/oauth?"
-  + "client_id="+ clientId
-  + "&redirect_uri=" + redirectUrl
-  + "&scope=" + scope;
+    var redirectUrl = document.getElementById('redirect-url').value,
+    clientId    = document.getElementById('client-id').value,
+    scope       = document.getElementById('scope').value,
+    fbAuthUrl   = "https://www.facebook.com/dialog/oauth?"
+    + "client_id="+ clientId
+    + "&redirect_uri=" + redirectUrl
+    + "&scope=" + scope;
 
-  $("#fb-login").focus()
-  .click(function(e){
-    e.preventDefault();
-    console.log('login button clicked');
+    $("#fb-login").focus()
+    .click(function(e){
+      e.preventDefault();
+      console.log('login button clicked');
 
-    window.location.href = fbAuthUrl;
+      window.location.href = fbAuthUrl;
+      //FB.getLoginStatus(handleFbStatus);
+    });
+
     //FB.getLoginStatus(handleFbStatus);
   });
+  </script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  //FB.getLoginStatus(handleFbStatus);
-});
-</script>
+  ga('create', 'UA-74756352-1', 'auto');
+  ga('send', 'pageview');
+
+  </script>
 </body>
 </html>
