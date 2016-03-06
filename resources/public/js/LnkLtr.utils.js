@@ -35,11 +35,13 @@
   };
 
   LnkLtr.utils.escapeHtml = function(str){
-    return he.escape(str);
+    var retStr = str? he.escape(str) : "";
+    return retStr;
   };
 
   LnkLtr.utils.unescapeHtml = function(str){
-    return he.unescape(str);
+    var retStr = str?  he.unescape(str):  "";
+    return retStr;
   };
 
   LnkLtr.utils.registerHandlebarHelpers = function(){

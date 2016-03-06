@@ -113,9 +113,10 @@ LnkLtr = {
 		}
 	},
   bindEvents: function(){
-    // init the dropdowns
+    // init the dropdowns for the top nav
     $('.ui.dropdown').dropdown();
-
+		
+		//bind events to link addition on being added to the dom
 		$('.collection-page').on('linkAdded', function(e, linkItem){
 			LnkLtr.linkModule.initLinkTemplate(e.target);
 		});
@@ -129,18 +130,16 @@ LnkLtr = {
 				self.showLinkPreviewModal(linkElm);
       }
     };
+		// show the linkpreview dialog on clicking the button in link inputbox
 		$('.menu .link').click(function(e){
 			self.showLinkPreviewModal(linkElm);
 		});
 		
-
       //bind delete action
     $('.collection-page').on('click','.link-item a.delete',function(e){ LnkLtr.deleteLink(e); })
 
+		//bind action for more button
     $('.more.button').on('click', function(e){
-      //if( $(window).scrollTop() == $(document).height() - $(window).height() ) {
-        console.log('scroll is called');
-        console.log(" Offset: ", self.offset," LIMIT: ", self.limit, "Link Count: ", self.linkCount);
         if(self.offset < self.linkCount){ 
           self.fetchLinkList({offset: self.offset, limit: self.limit},function(res){
             self.linkModule.displayList(res['result-set'])
@@ -149,9 +148,81 @@ LnkLtr = {
         }else{
 					//TODO hide the more button if all the links are loaded
 				}
-      //}
     });
+		
+		//show search results on pressing enter after putting the search term
+		document.getElementById('search').onkeypress = function(e){
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if(code == 13) { //Enter keycode
+				console.log("search called");
+				//query search term and on callback show results
+				self.querySearchParam(this);
+				self.switchToSearch();
+			}
+		};
+
+		//show main collection page on clicking the logo
+		$('#main .logo').click(function(e){
+			self.switchToCollection();
+		});
+
   },
+		querySearchParam: function(searchElm){
+			var url= '/search/q',
+				self = this;
+				data = { q: searchElm.value }; 
+			LnkLtr.ajax(url, data, function(list){
+				self.switchToSearch();
+				self.showSearchHeader(list.count, searchElm.value);
+				LnkLtr.linkModule.displaySearchList(list);});
+
+		},
+	clearSearchContainer: function(){
+		$('#search-container .collection-page').empty();
+		this.clearSearchHeader();
+		
+	},
+	clearSearch: function(){
+		this.clearSearchContainer();
+		$('#search').val('');
+	},
+	clearSearchHeader: function(){
+			this.showSearchHeader("","");
+			$('#search-container').find('search-result-header').addClass('hide');
+	},
+	showSearchHeader: function(count, term){
+		$('#search-container').find('.search-results-header .count').html(count || "0" );
+		if(term){
+			$('#search-container').find('.search-results-header .term').html('"'+term+'"');
+		}
+	},
+	showSearch: function(){
+		$('#search-container').removeClass('hide');
+	},
+	hideSearch: function(){
+		$('#search-container').addClass('hide');
+	},
+	hideCollection: function(){
+		$('#links-container').addClass('hide');
+	},
+	showCollection: function(){
+		$('#links-container').removeClass('hide');
+	},
+	switchToSearch: function(){
+		this.clearSearchContainer();
+		this.showSearch();
+		this.hideCollection();
+	},
+	switchToCollection: function(){
+		this.hideSearch();
+		this.clearSearch();
+		this.showCollection();
+	},
+	showEmptyCollectionSeaction: function(){
+		this.hideSearch();
+		this.hideCollection();
+		$('#empty-list-sec').show();
+	},
   submitNewLink: function(formData){
     $.ajax({
       type: "POST",

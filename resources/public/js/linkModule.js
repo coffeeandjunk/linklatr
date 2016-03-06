@@ -32,8 +32,8 @@ LnkLtr.linkModule = (function(){
      module.resetImage();
   }
 
-	module.addNewLink = function(compiledTempl, linkObj){
-		var linksContainer = $('.collection-page.container');
+	module.addNewLink = function(compiledTempl, linkObj, target){
+		var linksContainer = target || $('#links-container .collection-page.container');
     var link = compiledTempl(linkObj);
     module.addToRow(linksContainer, link);
 	}
@@ -79,7 +79,7 @@ LnkLtr.linkModule = (function(){
     console.log('From displayList>>> ', result.count);
     var list = result.result;
     $.each(list, function(idx, obj){
-      module.addNewLink(module.getLinkTemplate(), obj);
+      module.addNewLink(module.getLinkTemplate(), obj, $('#search-container .container.collection-page'));
     });
   }
 	return module;

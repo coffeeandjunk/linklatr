@@ -14,7 +14,6 @@ body {
 }
 
 .search-results-header {
-  display: none;
   font-size: 12px;
   font-weight: 700;
   color: #808080;
@@ -115,6 +114,7 @@ body {
 .nav-bar .logo {
   height: 38px;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .nav-bar #link {

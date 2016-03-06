@@ -56,8 +56,15 @@
     </div>
   </div>
 
-  <!-- Landing page when user hasnot collected any links content -->
-  <div class="no-link-page" style="display: none;">
+	<div class="ui notification message">
+		<!-- <i class="close icon"></i> -->
+		<div class="header">
+			Link saved
+		</div>
+	</div>
+
+  <!-- Landing page when user has not collected any links content -->
+  <div id="empty-list-sec" class="no-link-page" style="display: none;">
     <div class="no-link-logo-image">
       <img class="ui  image" src="img/linkletter_big.png" alt="no-image" />
     </div>
@@ -72,26 +79,37 @@
   </div>
 
 
-	<div class="search-results-header">143 SEARCH RESULTS FOR "JOY"
-		<div class="ui divider" style="margin-top:10px; max-width: 850px;"></div>
-	</div>
 
-	<div class="ui notification message">
-		<!-- <i class="close icon"></i> -->
-		<div class="header">
-			Link saved
+
+	<!-- user feed container -->
+	<div id="links-container">
+		
+		<!-- contains the user links -->
+		<div class="ui container collection-page">
+
+		</div> 
+		<div class="ui centered grid container">
+			<button class="ui circular icon massive more button" style="">
+				<i class="chevron down icon"></i>
+			</button>
 		</div>
 	</div>
-  <div class="ui container collection-page">
 
-  </div>
-	<div class="ui centered grid container">
-		<button class="ui circular icon massive more button" style="">
-			<i class="chevron down icon"></i>
-		</button>
+	<!-- search item container -->
+	<div id="search-container" class="hide">
+		<div class="search-results-header"><span class="count"></span> SEARCH RESULTS FOR <span class="term"></span>
+			<div class="ui divider" style="margin-top:10px; max-width: 850px;"></div>
+		</div>
+		<div class="ui container collection-page">
+		
+		</div>
+		<div class="ui centered grid container">
+			<button class="ui circular icon massive more button" style="">
+				<i class="chevron down icon"></i>
+			</button>
+		</div>
+
 	</div>
-
-
 
   <!-- Link saving dialog -->
   <div class="ui modal"id="add-link-dlg">
