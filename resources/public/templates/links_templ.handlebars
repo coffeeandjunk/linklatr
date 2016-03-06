@@ -8,7 +8,7 @@
       <div class="link-header" display="relative">
         <div class="link-title"><a href="{{url}}" target="_blank">{{title}}</a></div>
         <div class="link-controls">
-          <div class="ui icon left pointing dropdown button">
+          <div id="" class="ui icon left pointing dropdown button">
             <i class="ellipsis horizontal icon"></i>
             <div class="menu">
               <a class="item delete" href="javascript:;"><i class="trash icon"></i> Delete</a>
@@ -17,8 +17,8 @@
         </div>
       </div>
       <div class="link-url">{{url}}</div>
-      <!-- <div class="link-desc"><span style="font-weight: 700;">{{title}}: </span>{{link_desc}}</div> -->
-      <div class="link-desc">{{link_desc}}</div>
+      <!-- <div class="link-desc"><span style="font-weight: 700;">{{unescapeHtml title}}: </span>{{link_desc}}</div> -->
+      <div class="link-desc">{{unescapeHtml link_desc}}</div>
     </div>
   </div>
 </div>

@@ -29,7 +29,6 @@
     }
     return urlRegex.test(url);
   };
-
   
   LnkLtr.utils.showError = function(errorMsg){
     console.log("Error:  " , errorMsg);
@@ -42,6 +41,15 @@
   LnkLtr.utils.unescapeHtml = function(str){
     return he.unescape(str);
   };
+
+  LnkLtr.utils.registerHandlebarHelpers = function(){
+    Handlebars.registerHelper({
+      unescapeHtml: function(str){
+        return (LnkLtr.utils.unescapeHtml (str));
+      }
+    });
+  };
+
 
   LnkLtr.utils.getTemplate = function(name) {
     if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {

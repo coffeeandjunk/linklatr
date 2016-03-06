@@ -8,7 +8,9 @@ LnkLtr.linkModule = (function(){
 	}
 
 	module.addToRow = function(row, item){
-		return $(row).append(item);
+		var elm = $(row).append(item);
+    elm.trigger("linkAdded", item);
+    return elm;
 	}
 
 	module.compileTemplate = function(tmpl){
@@ -32,8 +34,8 @@ LnkLtr.linkModule = (function(){
 
 	module.addNewLink = function(compiledTempl, linkObj){
 		var linksContainer = $('.collection-page.container');
-    var link = compiledTempl(linkObj)
-			module.addToRow(linksContainer, link);
+    var link = compiledTempl(linkObj);
+    module.addToRow(linksContainer, link);
 	}
   module.resetImage = function(elm){
      $('#link-preview-container .link-preview').empty();
@@ -55,10 +57,17 @@ LnkLtr.linkModule = (function(){
     return LnkLtr.utils.getTemplate('links_templ'); //fetches the link template and compiles it
   }
 
+  //TODO improve the funciton, instead of re-initializing the whole container -
+  // initialize only the item added
+  module.initLinkTemplate = function(elm){
+     $('.collection-page .dropdown').dropdown();
+  }
+
   module.displayList = function(list){
     console.log('From displayList>>> ', list);
     $.each(list, function(idx, obj){
-      module.addNewLink(module.getLinkTemplate(), obj);
+      var template = module.getLinkTemplate();
+      module.addNewLink(template, obj);
     });
   }
 

@@ -14,6 +14,7 @@ LnkLtr = {
     self.offset = 0;
     //self.totalLinks = getTotalLinks();
 		self.bindEvents();
+		self.utils.registerHandlebarHelpers();
     self.fetchLinkList({offset: self.offset, limit: self.limit, "initial-call": true}, self.handleLinklist);
     self.initPreviewModule(); 
     self.linkField = $('#link');
@@ -115,6 +116,10 @@ LnkLtr = {
     // init the dropdowns
     $('.ui.dropdown').dropdown();
 
+		$('.collection-page').on('linkAdded', function(e, linkItem){
+			LnkLtr.linkModule.initLinkTemplate(e.target);
+		});
+
     var linkElm = document.getElementById('link');
     var self = this;
     //show linkpreview dialog on pressing enter ker
@@ -124,16 +129,13 @@ LnkLtr = {
 				self.showLinkPreviewModal(linkElm);
       }
     };
-		$('.menu .bookmark.link').click(function(e){
+		$('.menu .link').click(function(e){
 			self.showLinkPreviewModal(linkElm);
 		});
-    //bind logout button action
-    // $('.logout-button').click(function(e){
-    //   window.location.href = "/logout"
-    // });
+		
 
       //bind delete action
-    $('.collection-page').on('click','.link-container .link-footer a:first-child',function(e){ LnkLtr.deleteLink(e); })
+    $('.collection-page').on('click','.link-item a.delete',function(e){ LnkLtr.deleteLink(e); })
 
     $('.more.button').on('click', function(e){
       //if( $(window).scrollTop() == $(document).height() - $(window).height() ) {
