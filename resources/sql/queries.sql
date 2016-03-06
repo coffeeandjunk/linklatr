@@ -38,6 +38,7 @@ FROM l2u WHERE l2u.uid = :user_id
 SELECT  links.id, links.url, links.title, links.link_desc, links.image_url, l2u.uid 
 FROM links INNER JOIN l2u ON 
 l2u.lid = links.id AND l2u.uid = :user_id
+ORDER BY l2u.last_modified DESC
 LIMIT :limit OFFSET :offset
 
 --name: get-link-details
